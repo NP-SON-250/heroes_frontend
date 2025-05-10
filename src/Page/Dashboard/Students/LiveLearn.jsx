@@ -127,6 +127,7 @@ const LiveLearn = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setPaymentPopup(false);
+      navigate("/students/exams");
     } catch (error) {
       if (error.response?.status === 404) {
         alert("You have already purchased this exam.");

@@ -99,10 +99,6 @@ const StudentUnpaid = () => {
           },
         }
       );
-
-      toast.success(
-        "Ushoje kwishyura neza, mukanya urahabwa code yo gufungura ikizamini."
-      );
       closePopup();
       fetchData();
     } catch (error) {

@@ -62,12 +62,12 @@ const CompanyPopup = ({ onClose }) => {
         </button>
 
         {/* Content */}
-        <p className="text-center mb-2 capitalize">
+        <p className="md:text-start text-center mb-2 md:pl-24 capitalize">
           hemererwe kugura umuntu ufite <br />{" "}
           <strong className="pr-2">Ikkigo!</strong>
-          cyangwa uwabsabye hamagara:
-          <span className="text-orange-400 font-semibold text-lg pl-2">
-            0783905790
+          cyangwa uwabisabye hamagara: <br />
+          <span className="text-orange-400 font-semibold text-lg">
+            +250 792 337 053
           </span>
         </p>
 

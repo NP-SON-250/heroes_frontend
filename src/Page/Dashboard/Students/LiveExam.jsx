@@ -244,7 +244,7 @@ const LiveExam = () => {
                 type={examToDo?.type}
                 timeLeft={
                   <Timer
-                    initialTime={10}
+                    initialTime={1200}
                     onTimeEnd={handleSubmitExam}
                     examId={examCode}
                     examFinished={examFinished}
