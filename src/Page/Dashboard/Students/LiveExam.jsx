@@ -1,61 +1,36 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Logo from "../../../assets/logo.png";
+import { BsCart } from "react-icons/bs";
 import { GrSend } from "react-icons/gr";
 import { LuCircleArrowLeft } from "react-icons/lu";
 import { FiArrowRightCircle } from "react-icons/fi";
-import { FaRegEye } from "react-icons/fa6";
 import DescriptionCard from "../../../Components/Cards/DescriptionCard";
-import { ToastContainer, toast } from "react-toastify";
-import Timer from "../../../Components/ExamTimerLive";
+import ExamTimer from "../../../Components/ExamTimer";
+import Topbar from "../../../Components/Topbar";
 
-const LiveExam = () => {
+const LiveLearn = () => {
   const [examCode, setExamCode] = useState("");
   const [paidExam, setPaidExam] = useState(null);
+  const [testExam, setTestExam] = useState(null);
   const [examToDo, setExamToDo] = useState(null);
   const [examQuestions, setExamQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState(0);
-  const [selectedOptions, setSelectedOptions] = useState(() => {
-    return JSON.parse(localStorage.getItem("selectedOptions")) || {};
-  });
-  const [examFinished, setExamFinished] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [reviewResults, setReviewResults] = useState(false);
-  const [totalMarks, setTotalMarks] = useState(0);
   const [showNoQuestionsMessage, setShowNoQuestionsMessage] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [paymentPopup, setPaymentPopup] = useState(false);
+  const [interactedQuestions, setInteractedQuestions] = useState([]);
+  const [userAnswers, setUserAnswers] = useState({});
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  const hasShownSuccess = useRef(false);
   const location = useLocation();
   const navigate = useNavigate();
 
-  const errors = (message) => {
-    toast.error(message, {
-      position: "top-center",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-  };
-
-  const success = (message) => {
-    toast.success(message, {
-      position: "top-center",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-  };
+  const token = useMemo(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("token");
+    }
+    return "";
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -66,12 +41,9 @@ const LiveExam = () => {
   useEffect(() => {
     const fetchPaidExam = async () => {
       try {
-        const token = localStorage.getItem("token");
         const res = await axios.get(
           `https://heroes-backend-wapq.onrender.com/api/v1/purchases/access/${examCode}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
         setPaidExam(res.data.data.itemId);
       } catch (error) {
@@ -79,150 +51,177 @@ const LiveExam = () => {
       }
     };
     if (examCode) fetchPaidExam();
-  }, [examCode]);
+  }, [examCode, token]);
 
   useEffect(() => {
     const fetchExamDetails = async () => {
       try {
-        const token = localStorage.getItem("token");
         const examId = paidExam?.examId || paidExam?._id;
         if (!examId) return;
         const res = await axios.get(
           `https://heroes-backend-wapq.onrender.com/api/v1/exams/${examId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
         const examData = res.data.data;
         setExamToDo(examData);
-        localStorage.setItem("live_exam_data", JSON.stringify(examData));
+        if (typeof window !== "undefined") {
+          localStorage.setItem("live_exam_data", JSON.stringify(examData));
+        }
       } catch (error) {
         console.error("Error fetching exam details:", error);
       }
     };
     if (paidExam) fetchExamDetails();
-  }, [paidExam]);
+  }, [paidExam, token]);
 
   useEffect(() => {
     if (examToDo && examCode) {
-      setExamQuestions(examToDo.questions || []);
+      const questions = examToDo.questions || [];
+      setExamQuestions(questions);
+
+      if (questions.length === 0) {
+        setShowNoQuestionsMessage(true);
+      }
     }
   }, [examToDo, examCode]);
 
-  useEffect(() => {
-    localStorage.setItem("selectedOptions", JSON.stringify(selectedOptions));
-  }, [selectedOptions]);
-
-  const handleSubmitExam = useCallback(async () => {
-    if (examFinished || !examToDo || isSubmitting) return;
-    setIsSubmitting(true);
-
+  const fetchTestExam = useCallback(async () => {
     try {
-      let score = 0;
-      examQuestions.forEach((q) => {
-        const selectedOptionId = selectedOptions[q._id];
-        const correctOption = q.options.find((opt) => opt.isCorrect);
-        if (selectedOptionId && selectedOptionId === correctOption?._id) {
-          score++;
-        }
-      });
+      const number = paidExam?.number;
+      if (!number) return;
 
-      const token = localStorage.getItem("token");
-      if (!token) {
-        errors("Ntacyo wakora udafite konti, banza winjire.");
-        setExamFinished(true);
-        navigate("/kwinjira");
-        return;
-      }
-
-      const savedOptions =
-        JSON.parse(localStorage.getItem("selectedOptions")) || {};
-      const responses = Object.keys(savedOptions).map((questionId) => ({
-        questionId,
-        selectedOptionId: savedOptions[questionId],
-      }));
-
-      const payload = {
-        examId: examToDo._id,
-        responses,
-      };
-
-      const res = await fetch(
-        `https://heroes-backend-wapq.onrender.com/api/v1/responses/add`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(payload),
-        }
+      const purchaseRes = await axios.get(
+        "https://heroes-backend-wapq.onrender.com/api/v1/purchases/user",
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      const data = await res.json();
+      const purchasedExams = purchaseRes.data.data;
+      const examPurchased = purchasedExams.some(
+        (p) => p.accessCode === examCode
+      );
+      if (!examPurchased) return;
 
-      if (!res.ok || data.status !== "200") {
-        const message = data.message || "Gutanga ibisubizo byanze.";
-        throw new Error(message);
+      const res = await axios.get(
+        `https://heroes-backend-wapq.onrender.com/api/v1/exams/test/${number}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      const testData = res.data.data;
+      setTestExam(testData);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("test_exam_data", JSON.stringify(testData));
       }
-
-      if (!hasShownSuccess.current) {
-        success("Ibisubizo byawe byoherejwe neza.");
-        hasShownSuccess.current = true;
-      }
-
-      localStorage.removeItem("selectedOptions");
-      localStorage.removeItem(`examTimeLeft_${examCode}`);
-      setSelectedOption(null);
-      setTotalMarks(score);
-      setExamFinished(true);
-      setShowModal(false);
     } catch (error) {
-      console.error("Submission error:", error);
-      errors(error.message || "Habaye ikibazo mu kohereza ibisubizo.");
-    } finally {
-      setIsSubmitting(false);
+      console.error("Error fetching test exam:", error);
     }
-  }, [
-    examQuestions,
-    examToDo,
-    examCode,
-    navigate,
-    selectedOptions,
-    examFinished,
-    isSubmitting,
-  ]);
+  }, [examCode, paidExam, token]);
 
-  const handleAnswerChange = (questionId, optionId) => {
-    if (examFinished) return;
-    setSelectedOptions((prev) => {
-      const updated = { ...prev, [questionId]: optionId };
-      localStorage.setItem("selectedOptions", JSON.stringify(updated));
-      return updated;
-    });
+  const handleShowPaymentPopup = async () => {
+    await fetchTestExam();
+    if (testExam) {
+      setPaymentPopup(true);
+    }
   };
 
-  const confirmFinishExam = () => setShowModal(true);
-
-  const handleModalResponse = (res) => {
-    if (res === "yes") {
-      handleSubmitExam();
+  const handlePayLaterClick = async () => {
+    try {
+      await axios.post(
+        `https://heroes-backend-wapq.onrender.com/api/v1/purchases/${testExam._id}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setPaymentPopup(false);
+      navigate("/students/exams");
+    } catch (error) {
+      if (error.response?.status === 404) {
+        alert("You have already purchased this exam.");
+      } else {
+        console.error("Purchase request failed:", error);
+        alert("Failed to initiate purchase. Please try again.");
+      }
     }
-    setShowModal(false);
   };
 
-  const handleReviewResults = () => setReviewResults(true);
+  const handleSelectQuestion = (index) => {
+    setSelectedQuestion(index);
+    setInteractedQuestions((prev) =>
+      prev.includes(index) ? prev : [...prev, index]
+    );
+  };
 
-  useEffect(() => {
-    if (examToDo && examToDo.questions?.length === 0) {
-      setShowNoQuestionsMessage(true);
+  const handleAnswerSelect = (questionIndex, answerIndex) => {
+    setUserAnswers(prev => ({
+      ...prev,
+      [questionIndex]: answerIndex
+    }));
+  };
+
+  const currentQuestion = useMemo(
+    () => examQuestions[selectedQuestion],
+    [selectedQuestion, examQuestions]
+  );
+
+  const handleTimeout = useCallback(async () => {
+    try {
+      await submitExamResponses();
+      if (examCode) {
+        await axios.delete(
+          `https://heroes-backend-wapq.onrender.com/api/v1/purchases/access/${examCode}`
+        );
+        navigate("/students/market");
+      }
+    } catch (error) {
+      console.error("Error during timeout:", error);
     }
-  }, [examToDo]);
+    localStorage.removeItem(`selectedAnswers_${examCode}`);
+  }, [examCode, navigate]);
 
-  const currentQuestion = examQuestions[selectedQuestion];
+  const submitExamResponses = async () => {
+    try {
+      if (Object.keys(userAnswers).length > 0) {
+        await axios.post(
+          `https://heroes-backend-wapq.onrender.com/api/v1/exams/submit/${examCode}`,
+          { answers: userAnswers },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        console.log("Exam submitted successfully");
+      }
+    } catch (error) {
+      console.error("Error submitting exam:", error);
+      throw error;
+    }
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/kwinjira", { replace: true });
+  };
+
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = async () => {
+    try {
+      await submitExamResponses();
+      handleSignOut();
+      setShowLogoutModal(false);
+    } catch (error) {
+      console.error("Error during logout:", error);
+      alert("There was an error submitting your exam. Please try again.");
+    }
+  };
 
   return (
     <div className="flex flex-col bg-white md:p-2 gap-2">
+      <Topbar 
+        currentSection="Live Learn" 
+        role="students" 
+        onSignOut={handleSignOut}
+        onSubmitExam={submitExamResponses}
+        onLogout={handleLogoutClick}
+      />
+
       {showNoQuestionsMessage ? (
         <div className="text-center mt-10 text-Total font-semibold">
           <p>Ikikizami ntabibazo gifite. Hamagara Admin</p>
@@ -232,54 +231,59 @@ const LiveExam = () => {
         </div>
       ) : (
         <>
-          {!reviewResults && (
-            <>
-              <DescriptionCard
-                questions={examQuestions.length}
-                total20={examQuestions.length * 1}
-                total100={examQuestions.length * 5}
-                pass20={((12 / 20) * examQuestions.length).toFixed(0)}
-                pass100={((60 / 20) * examQuestions.length).toFixed(0)}
-                number={examToDo?.number}
-                type={examToDo?.type}
-                timeLeft={
-                  <Timer
-                    initialTime={1200}
-                    onTimeEnd={handleSubmitExam}
-                    examId={examCode}
-                    examFinished={examFinished}
-                  />
-                }
-                access={examCode}
-              />
-              <div className="flex flex-wrap justify-start py-1 md:gap-4 gap-2">
-                {examQuestions.map((q, idx) => {
-                  const isAnswered = selectedOptions[q._id];
-                  return (
-                    <button
-                      key={q._id}
-                      onClick={() => !examFinished && setSelectedQuestion(idx)}
-                      disabled={examFinished}
-                      className={`w-20 h-10 text-sm rounded-md flex justify-center items-center 
-                      ${
-                        isAnswered
-                          ? "bg-blue-500 text-white"
-                          : "bg-white border"
-                      } 
-                      ${examFinished ? "opacity-50 cursor-not-allowed" : ""}`}
-                    >
-                      Ikibazo: {idx + 1}
-                    </button>
-                  );
-                })}
-              </div>
-            </>
-          )}
+          <>
+            <h1 className="md:text-xl text-center md:py-1 py-3 font-bold text-Total capitalize">
+              Ibisubizo by'ukuri biri mu ibara ry'icyatsi
+            </h1>
+            <DescriptionCard
+              questions={examQuestions.length}
+              total20={examQuestions.length * 1}
+              total100={examQuestions.length * 5}
+              pass20={((12 / 20) * examQuestions.length).toFixed(0)}
+              pass100={((60 / 20) * examQuestions.length).toFixed(0)}
+              number={examToDo?.number}
+              type={examToDo?.type}
+              timeLeft={
+                <ExamTimer
+                  accessCode={examCode}
+                  duration={3600}
+                  onTimeout={handleTimeout}
+                />
+              }
+              access={examCode}
+            />
+
+            <div className="flex flex-wrap justify-start py-1 md:gap-4 gap-2">
+              {examQuestions.map((q, idx) => {
+                const isCurrent = selectedQuestion === idx;
+                const isInteracted = interactedQuestions.includes(idx);
+                const hasAnswer = userAnswers[idx] !== undefined;
+
+                const getButtonClasses = () => {
+                  if (isCurrent) return "bg-blue-500 text-white";
+                  if (hasAnswer) return "bg-green-500 text-white";
+                  return isInteracted
+                    ? "bg-blue-500 text-white"
+                    : "bg-white border";
+                };
+
+                return (
+                  <button
+                    key={q._id}
+                    onClick={() => handleSelectQuestion(idx)}
+                    className={`w-20 h-10 text-sm rounded-md flex justify-center items-center ${getButtonClasses()}`}
+                  >
+                    Ikibazo: {idx + 1}
+                  </button>
+                );
+              })}
+            </div>
+          </>
 
           <div className="w-full px-3">
-            {!reviewResults && currentQuestion ? (
+            {currentQuestion ? (
               <>
-                <h3 className="mb-0 md:text-base text-sm font-semibold">
+                <h3 className="mb-0 md:text-md text-sm font-semibold">
                   Q{selectedQuestion + 1}. {currentQuestion.phrase}
                 </h3>
                 {currentQuestion.image && (
@@ -289,265 +293,85 @@ const LiveExam = () => {
                     className="w-32 h-32 rounded-md mb-1"
                   />
                 )}
-                <div className="mb-1 space-y-1">
-                  {currentQuestion.options.map((option, idx) => {
-                    const isSelected =
-                      selectedOptions[currentQuestion._id] === option._id;
+                <form className="space-y-1 md:text-md text-sm">
+                  {currentQuestion.options.map((option, index) => {
+                    const optionLabels = [
+                      "A",
+                      "B",
+                      "C",
+                      "D",
+                      "E",
+                      "F",
+                      "G",
+                      "H",
+                    ];
+                    const label = optionLabels[index];
+                    const isCorrect = option.isCorrect;
+                    const isSelected = userAnswers[selectedQuestion] === index;
+
                     return (
-                      <label
-                        key={option._id}
-                        className={`flex items-center space-x-2 cursor-pointer ${
-                          examFinished ? "cursor-not-allowed opacity-70" : ""
-                        }`}
-                        onClick={() =>
-                          !examFinished &&
-                          handleAnswerChange(currentQuestion._id, option._id)
-                        }
-                      >
-                        <div
-                          className={`w-3 h-3 rounded-full border flex items-center justify-center transition ${
-                            isSelected
-                              ? "bg-blue-500 text-white"
-                              : "bg-white border-gray-600"
-                          }`}
+                      <div key={index} className="flex items-center gap-2">
+                        <label
+                          htmlFor={`option-${selectedQuestion}-${index}`}
+                          className={`cursor-pointer ${
+                            isCorrect ? "text-green-600 font-semibold" : ""
+                          } ${isSelected ? "font-bold" : ""}`}
                         >
-                          {isSelected && <span className="text-sm">✔</span>}
-                        </div>
-                        <span>
-                          {String.fromCharCode(97 + idx)}. {option.text}
-                        </span>
-                      </label>
+                          <input
+                            type="radio"
+                            id={`option-${selectedQuestion}-${index}`}
+                            name={`question-${selectedQuestion}`}
+                            checked={isSelected}
+                            onChange={() => handleAnswerSelect(selectedQuestion, index)}
+                            className="mr-2"
+                          />
+                          <span className="capitalize">{label}:</span>{" "}
+                          {option.text}
+                        </label>
+                      </div>
                     );
                   })}
-                </div>
-                {!examFinished && (
-                  <div className="mt-4 md:flex md:justify-between grid grid-cols-2 gap-4 md:pb-0 pb-4">
-                    <button
-                      onClick={confirmFinishExam}
-                      className="bg-blue-900 text-white px-4 py-1 rounded flex justify-center items-center gap-2"
-                    >
-                      <GrSend />
-                      Soza Ikizamini
-                    </button>
-                    <button
-                      onClick={() =>
-                        setSelectedQuestion((prev) => Math.max(prev - 1, 0))
-                      }
-                      className={`bg-blue-900 text-white px-4 py-1 rounded flex jus items-center gap-2
-                              ${
-                                selectedQuestion === 0
-                                  ? "bg-gray-500 cursor-not-allowed"
-                                  : "bg-blue-900"
-                              }`}
-                      disabled={selectedQuestion === 0}
-                    >
-                      <LuCircleArrowLeft />
-                      Ikibanza
-                    </button>
-                    <button
-                      onClick={() =>
-                        setSelectedQuestion((prev) =>
-                          Math.min(prev + 1, examQuestions.length - 1)
-                        )
-                      }
-                      className={`bg-blue-900 text-white px-4 py-1 rounded flex jus items-center gap-2
-                              ${
-                                selectedQuestion === examQuestions.length - 1
-                                  ? "bg-gray-500 cursor-not-allowed"
-                                  : "bg-blue-900"
-                              }`}
-                      disabled={selectedQuestion === examQuestions.length - 1}
-                    >
-                      <FiArrowRightCircle /> Igikurikira
-                    </button>
-                  </div>
-                )}
-                {examFinished && !reviewResults && (
-                  <div className="flex justify-center items-center flex-col">
-                    <div className="mt-2 flex justify-center md:gap-24 gap-10 md:mb-0">
-                      <button className="bg-gray-500 cursor-not-allowed text-white px-4 py-1 rounded flex jus items-center gap-2">
-                        <GrSend />
-                        Soza Ikizamini
-                      </button>
-                      <button
-                        onClick={handleReviewResults}
-                        className="bg-green-500 flex justify-center gap-2 items-center text-white px-2 py-1 rounded"
-                      >
-                        <FaRegEye />
-                        Reba amanota
-                      </button>
-                    </div>
-                    <div className="text-md flex gap-12 mt-1 text-orange-500 font-medium">
-                      <p>
-                        {totalMarks}/{examQuestions.length}
-                      </p>
-                      <p>
-                        {((totalMarks / examQuestions.length) * 100).toFixed(0)}
-                        /100
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                {showModal && (
-                  <div className="fixed inset-0 bg-black/60 flex justify-center items-center p-2 z-[9999]">
-                    <div className="bg-Total rounded-lg flex md:flex-row flex-col items-center justify-around shadow-lg md:w-[60%] md:py-14 py-0 w-full text-center relative">
-                      <button
-                        className="absolute top-2 right-2 text-xl bg-white text-red-700 border-2 border-white rounded-full w-8 h-8 flex justify-center"
-                        onClick={() => handleModalResponse("no")}
-                      >
-                        ✖
-                      </button>
-                      <img
-                        src={Logo}
-                        alt="Logo"
-                        className="w-48 h-48 justify-center"
-                      />
-                      <div className="bg-white rounded-md md:w-[60%] w-full pb-4">
-                        <div className="p-2 w-full bg-green-700 rounded-md text-center">
-                          <h1 className="md:text-lg text-sm font-bold text-blue-900">
-                            Attention
-                          </h1>
-                        </div>
-                        <h3 className="md:text-lg text-sm font-bold my-3 text-center">
-                          Are you sure to finish Exam now?
-                        </h3>
-                        <div className="flex justify-between p-6">
-                          <button
-                            onClick={() => handleModalResponse("no")}
-                            className="bg-Total text-white px-4 py-1 rounded"
-                          >
-                            No, Back
-                          </button>
-                          <button
-                            onClick={() => handleModalResponse("yes")}
-                            disabled={isSubmitting}
-                            className="bg-Total text-white px-4 py-1 rounded disabled:opacity-50"
-                          >
-                            {isSubmitting ? "Submitting..." : "Yes, I finish"}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : reviewResults ? (
-              <>
-                <div className="w-full bg-green-500 text-blue-900 font-bold text-xl rounded-md text-center mb-4">
-                  <h2 className="font-bold py-2">Exam Review</h2>
-                </div>
-                <div className="overflow-x-auto rounded-lg shadow border border-blue-900 w-full">
-                  <table className="w-full text-left table-auto">
-                    <thead className="bg-gray-300 text-blue-900">
-                      <tr>
-                        <th className="border p-1 text-bold md:text-lg text-sm">
-                          Ibibazo
-                        </th>
-                        <th className="border p-1 text-bold md:text-lg text-sm">
-                          Ibisubizo
-                        </th>
-                        <th className="border p-1 text-bold md:text-lg text-sm">
-                          Amanota
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {examQuestions.map((q) => {
-                        const selectedOptionId = selectedOptions[q._id];
-                        const correctOption = q.options.find(
-                          (opt) => opt.isCorrect
-                        );
-                        const correct = selectedOptionId === correctOption?._id;
-
-                        return (
-                          <tr key={q._id}>
-                            <td className="border px-2">
-                              <div>{q.phrase}</div>
-                              {q.image && (
-                                <img
-                                  src={q.image}
-                                  alt=""
-                                  className="w-16 h-16 rounded-full"
-                                />
-                              )}
-                            </td>
-                            <td className="border px-2">
-                              {q.options.map((opt, i) => {
-                                const isSelected = selectedOptionId === opt._id;
-                                const isCorrect =
-                                  opt._id === correctOption?._id;
-
-                                return (
-                                  <div
-                                    key={opt._id}
-                                    className={`p-1 ${
-                                      isCorrect
-                                        ? "text-green-500"
-                                        : isSelected
-                                        ? "text-red-500"
-                                        : ""
-                                    }`}
-                                  >
-                                    {String.fromCharCode(97 + i)}. {opt.text}
-                                  </div>
-                                );
-                              })}
-                            </td>
-                            <td className="border border-gray-300">
-                              <div
-                                className={`text-center -mt-12 font-semibold ${
-                                  correct ? "text-green-500" : "text-red-500"
-                                }`}
-                              >
-                                {correct ? "Wagikoze" : "Wakishe"}
-                              </div>
-                              <div className="text-center font-semibold">
-                                {selectedOptionId == null
-                                  ? "Kuko Ntiwagisubije"
-                                  : correct
-                                  ? "Amanota: 1/20 | 5%"
-                                  : "Amanota: 0/20 | 0%"}
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                    <tfoot>
-                      <tr>
-                        <td
-                          colSpan="3"
-                          className="text-center font-bold md:text-lg text-sm p-4 bg-gray-100"
-                        >
-                          <div className="text-center md:text-base text-sm text-blue-900">
-                            {totalMarks >= 10
-                              ? "Conglaturations you have made it 🙌🙌🙌"
-                              : "You failed this exam, You need to learn more!!"}
-                          </div>
-                          <div className="text-md text-orange-500 font-medium">
-                            Total Marks: {totalMarks}/{examQuestions.length} |{" "}
-                            {(
-                              (totalMarks / examQuestions.length) *
-                              100
-                            ).toFixed(0)}
-                            /100
-                          </div>
-                        </td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-                <div className="flex justify-center mt-4">
+                </form>
+                <div className="mt-4 mb-12 flex justify-between flex-wrap gap-2">
                   <button
-                    onClick={() => {
-                      localStorage.removeItem("selectedOptions");
-                      localStorage.removeItem(`examTimeLeft_${examCode}`);
-                      navigate("/students/waitingexams");
-                    }}
-                    className="bg-red-300 text-white py-2 px-4 rounded"
+                    onClick={handleShowPaymentPopup}
+                    className="bg-blue-900 text-white px-4 py-1 rounded flex md:ml-0 ml-12 items-center gap-2"
                   >
-                    Kuraho iyi paje
+                    <GrSend />
+                    Isuzume Muri ikikizamini
+                  </button>
+                  <button
+                    onClick={() =>
+                      handleSelectQuestion(Math.max(selectedQuestion - 1, 0))
+                    }
+                    disabled={selectedQuestion === 0}
+                    className={`text-white px-4 py-1 rounded flex items-center gap-2
+                     ${
+                       selectedQuestion === 0
+                         ? "bg-gray-500 cursor-not-allowed"
+                         : "bg-blue-900"
+                     }
+                     `}
+                  >
+                    <LuCircleArrowLeft />
+                    Ikibanza
+                  </button>
+                  <button
+                    onClick={() =>
+                      handleSelectQuestion(
+                        Math.min(selectedQuestion + 1, examQuestions.length - 1)
+                      )
+                    }
+                    disabled={selectedQuestion === examQuestions.length - 1}
+                    className={`text-white px-4 py-1 rounded flex items-center gap-2
+                      ${
+                        selectedQuestion === examQuestions.length - 1
+                          ? "bg-gray-500 cursor-not-allowed"
+                          : "bg-blue-900"
+                      }
+                    `}
+                  >
+                    <FiArrowRightCircle /> Igikurikira
                   </button>
                 </div>
               </>
@@ -555,9 +379,69 @@ const LiveExam = () => {
           </div>
         </>
       )}
-      <ToastContainer />
+
+      {paymentPopup && testExam && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+          <div className="bg-Total p-4 rounded-lg md:w-1/2 h-1/2 flex justify-center items-center w-full relative">
+            <button
+              className="absolute top-1 bg-white w-10 h-10 rounded-full right-2 text-red-500 text-xl"
+              onClick={() => setPaymentPopup(false)}
+            >
+              ✖
+            </button>
+
+            <div className="md:w-1/2 w-full md:px-0 px-3">
+              <div className="flex w-full flex-col bg-gray-300 rounded-lg">
+                <div className="flex flex-col justify-center items-center gap-1 py-5">
+                  <h1 className="text-xl pt-1 text-Total font-bold">
+                    {testExam.title}: {testExam.number}
+                  </h1>
+                  <div className="flex flex-col justify-center items-start">
+                    <p className="text-Total">
+                      Exam Fees:{" "}
+                      <span className="font-bold">{testExam.fees} Rwf</span>
+                    </p>
+                    <p className="text-Total">Exam Type: {testExam.type}</p>
+                  </div>
+                </div>
+                <div className="pt-1">
+                  <button
+                    className="flex items-center justify-center gap-4 text-lg py-1 px-4 rounded-md w-full text-white bg-yellow-500"
+                    onClick={handlePayLaterClick}
+                  >
+                    <BsCart /> Confirm Purchase
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showLogoutModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1000]">
+          <div className="bg-white p-6 rounded-lg max-w-md w-full">
+            <h3 className="text-lg font-bold mb-4">Confirm Logout</h3>
+            <p className="mb-6">Are you sure you want to logout? Your exam progress will be submitted automatically.</p>
+            <div className="flex justify-end gap-4">
+              <button 
+                onClick={() => setShowLogoutModal(false)}
+                className="px-4 py-2 border rounded"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={confirmLogout}
+                className="px-4 py-2 bg-red-500 text-white rounded"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default LiveExam;
+export default LiveLearn;
