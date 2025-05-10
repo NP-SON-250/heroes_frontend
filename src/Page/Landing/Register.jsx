@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { GoPaperclip } from "react-icons/go";
 import { ImUserPlus } from "react-icons/im";
 import { IoClose } from "react-icons/io5";
-import Police from "../../assets/Policelogo.png";
+import Logo from "../../assets/logo.png";
 import HalfInput from "../../Components/Inputs/Studentnputs/HalfInput";
 import FullInput from "../../Components/Inputs/Studentnputs/FullInput";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -87,7 +87,7 @@ const Register = () => {
 
     try {
       const res = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/users",
+        "https://heroes-backend-wapq.onrender.com/api/v1/users",
         data
       );
       notifySuccess(res.data.message || "Kwiyandikisha byagenze neza!");
@@ -106,13 +106,13 @@ const Register = () => {
     <div className=" pt-16">
       <div className="bg-black/20 flex justify-center items-center p-1 rounded-sm">
         <h1 className="text-xl text-Total font-semibold font-Roboto">
-          Fungura konti kuri Congozi
+          Fungura konti kuri Heroes
         </h1>
       </div>
       <div className="flex md:flex-row flex-col">
         {/* Logo Section */}
         <div className="flex justify-center items-center bg-Total md:h-[75vh] md:w-[45%]">
-          <img src={Police} alt="" className="h-[200px]" />
+          <img src={Logo} alt="" className="h-[200px]" />
         </div>
 
         {/* Form Section */}

@@ -7,7 +7,7 @@ import { FaUsersCog } from "react-icons/fa";
 import { PiFolderSimpleUserLight, PiExam } from "react-icons/pi";
 import { IoIosMenu, IoIosArrowForward } from "react-icons/io";
 import { MdDashboard } from "react-icons/md";
-import { MdManageAccounts, MdAccountBalance } from "react-icons/md";
+import { MdAccountBalance } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
 import { FcSalesPerformance } from "react-icons/fc";
 import { FaGoogleScholar } from "react-icons/fa6";

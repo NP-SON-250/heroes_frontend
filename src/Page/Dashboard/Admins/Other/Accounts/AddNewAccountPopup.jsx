@@ -9,7 +9,7 @@ const AddNewAccountPopup = ({ setShowAddAccountPopup, onAccountAdded }) => {
   const handleSave = async () => {
     try {
       const response = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/accounts",
+        "https://heroes-backend-wapq.onrender.com/api/v1/accounts",
         {
           title: accountTitle,
           fees: accountFees,

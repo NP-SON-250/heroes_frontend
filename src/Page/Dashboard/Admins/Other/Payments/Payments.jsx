@@ -12,7 +12,7 @@ const Payments = () => {
       const token = localStorage.getItem("token");
       try {
         const res = await axios.get(
-          "https://congozi-backend.onrender.com/api/v1/purchases/",
+          "https://heroes-backend-wapq.onrender.com/api/v1/purchases/",
           {
             headers: {
               Authorization: `Bearer ${token}`,

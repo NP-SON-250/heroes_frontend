@@ -25,7 +25,7 @@ const AdminAccounts = () => {
   const fetchAccounts = async () => {
     try {
       const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/accounts"
+        "https://heroes-backend-wapq.onrender.com/api/v1/accounts"
       );
       setAccounts(response.data.data || []);
     } catch (error) {
@@ -55,7 +55,7 @@ const AdminAccounts = () => {
   const handleDeleteAccount = async () => {
     try {
       await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/accounts/${accountToDelete._id}`
+        `https://heroes-backend-wapq.onrender.com/api/v1/accounts/${accountToDelete._id}`
       );
       fetchAccounts();
     } catch (error) {
@@ -73,7 +73,7 @@ const AdminAccounts = () => {
   const handleSaveEdit = async () => {
     try {
       await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/accounts/${accountToEdit._id}`,
+        `https://heroes-backend-wapq.onrender.com/api/v1/accounts/${accountToEdit._id}`,
         {
           title: editedTitle,
           fees: editedFees,

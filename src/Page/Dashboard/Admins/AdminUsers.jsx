@@ -42,7 +42,7 @@ const AdminUsers = () => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get(
-          "https://congozi-backend.onrender.com/api/v1/users"
+          "https://heroes-backend-wapq.onrender.com/api/v1/users"
         );
         setUsers(response.data.data);
       } catch (error) {
@@ -99,7 +99,7 @@ const AdminUsers = () => {
       };
 
       const response = await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/users/${userToEdit._id}`,
+        `https://heroes-backend-wapq.onrender.com/api/v1/users/${userToEdit._id}`,
         updatedUser
       );
 
@@ -127,7 +127,7 @@ const AdminUsers = () => {
 
     try {
       await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/users/${userToDelete._id}`
+        `https://heroes-backend-wapq.onrender.com/api/v1/users/${userToDelete._id}`
       );
       console.log("User successfully deleted");
 
@@ -164,7 +164,7 @@ const AdminUsers = () => {
       };
 
       const response = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/users",
+        "https://heroes-backend-wapq.onrender.com/api/v1/users",
         newUser
       );
 

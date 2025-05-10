@@ -85,7 +85,7 @@ const AdminProfile = () => {
       const token = localStorage.getItem("token");
 
       const response = await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/users/${user._id}`,
+        `https://heroes-backend-wapq.onrender.com/api/v1/users/${user._id}`,
         form,
         {
           headers: {

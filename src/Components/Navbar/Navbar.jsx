@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
-import Logo from "../../assets/Policelogo.png";
+import Logo from "../../assets/logo.png";
 import { navContents } from "../../Data/morkData";
 import { MdMenu, MdOutlineClose } from "react-icons/md";
 import ResponsiveMenu from "./ResponsiveMenu";
@@ -24,7 +24,7 @@ const Navbar = () => {
           </div>
 
           {/* Menu Section */}
-          <div className="md:block hidden border border-Waiting rounded-md py-1 px-10">
+          <div className="md:block hidden py-1 px-10">
             <ul className="flex items-center gap-6 text-white">
               {navContents.map((items) => {
                 const isActive = location.pathname === items.link;
@@ -47,19 +47,19 @@ const Navbar = () => {
           {/* Button Section */}
           <Link to={"/kwinjira"}>
             <div
-              className={`flex justify-center items-center gap-2 px-2 py-1 rounded-3xl cursor-pointer ${
+              className={`flex justify-center items-center text-white hover:text-yellow-700 gap-2 px-2 py-1 rounded-3xl cursor-pointer ${
                 isDisabled
-                  ? "bg-gray-500 cursor-not-allowed"
-                  : "bg-Unpaid/95 hover:bg-yellow-700"
+                  ? "text-gray-500 cursor-not-allowed"
+                  : "text-white hover:text-yellow-700"
               }`}
             >
               {/* Icon */}
-              <div className="bg-white w-6 h-6 p-2 flex justify-center items-center rounded-full">
+              <div className="bg-Unpaid/95 hover:bg-white w-6 h-6 p-2 flex justify-center items-center rounded-full">
                 <FaUser />
               </div>
               <button
-                className={`text-xl text-blue-900 pr-4 font-semibold ${
-                  isDisabled ? "opacity-50" : ""
+                className={`text-xl  pr-4 font-semibold ${
+                  isDisabled ? "opacity-50 cursor-pointer" : ""
                 }`}
                 disabled={isDisabled}
               >

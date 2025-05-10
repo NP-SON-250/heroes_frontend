@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Police from "../../assets/Policelogo.png";
+import Logo from "../../assets/logo.png";
 
 const ContinueCard = ({ code, onClick, onChange, onClose }) => {
   return (
@@ -11,7 +11,7 @@ const ContinueCard = ({ code, onClick, onChange, onClose }) => {
         >
           ✖
         </button>
-        <img src={Police} alt="" className="w-24" />
+        <img src={Logo} alt="" className="w-24" />
         <div className="flex flex-col gap-5 justify-center items-center">
           <input
             type="text"

@@ -31,7 +31,7 @@ const StudentUnpaid = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/purchases/pending",
+        "https://heroes-backend-wapq.onrender.com/api/v1/purchases/pending",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -91,7 +91,7 @@ const StudentUnpaid = () => {
       const purchaseId = selectedExam._id;
 
       const response = await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${purchaseId}`,
+        `https://heroes-backend-wapq.onrender.com/api/v1/purchases/${purchaseId}`,
         { status: "complete" },
         {
           headers: {

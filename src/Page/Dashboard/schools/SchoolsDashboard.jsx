@@ -38,19 +38,19 @@ const SchoolsDashboard = () => {
         const [unpaidRes, totalRes, expiredRes, waitingRes] = await Promise.all(
           [
             axios.get(
-              "https://congozi-backend.onrender.com/api/v1/unpaidaccounts",
+              "https://heroes-backend-wapq.onrender.com/api/v1/unpaidaccounts",
               config
             ),
             axios.get(
-              "https://congozi-backend.onrender.com/api/v1/totaluseraccounts",
+              "https://heroes-backend-wapq.onrender.com/api/v1/totaluseraccounts",
               config
             ),
             axios.get(
-              "https://congozi-backend.onrender.com/api/v1/expiredaccounts",
+              "https://heroes-backend-wapq.onrender.com/api/v1/expiredaccounts",
               config
             ),
             axios.get(
-              "https://congozi-backend.onrender.com/api/v1/waittingaccounts",
+              "https://heroes-backend-wapq.onrender.com/api/v1/waittingaccounts",
               config
             ),
           ]

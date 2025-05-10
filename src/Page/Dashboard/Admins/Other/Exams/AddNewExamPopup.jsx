@@ -17,7 +17,7 @@ const AddNewExamPopup = ({ setShowAddExamPopup, onExamAdded }) => {
       };
 
       const res = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/exams",
+        "https://heroes-backend-wapq.onrender.com/api/v1/exams",
         newExam
       );
 

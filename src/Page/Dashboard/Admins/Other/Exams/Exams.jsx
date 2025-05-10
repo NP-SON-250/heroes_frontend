@@ -24,7 +24,7 @@ const Exams = () => {
     const fetchExams = async () => {
       try {
         const res = await axios.get(
-          "https://congozi-backend.onrender.com/api/v1/exams"
+          "https://heroes-backend-wapq.onrender.com/api/v1/exams"
         );
         if (res.data) {
           setExams(res.data.data);
@@ -57,7 +57,7 @@ const Exams = () => {
 
     try {
       const res = await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/exams/${examToDelete._id}`
+        `https://heroes-backend-wapq.onrender.com/api/v1/exams/${examToDelete._id}`
       );
       if (res.data) {
         const updatedExams = exams.filter((e) => e._id !== examToDelete._id);
@@ -94,7 +94,7 @@ const Exams = () => {
 
     try {
       const res = await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/exams/${editingExam._id}`,
+        `https://heroes-backend-wapq.onrender.com/api/v1/exams/${editingExam._id}`,
         {
           title: editedTitle,
           fees: editedFees,

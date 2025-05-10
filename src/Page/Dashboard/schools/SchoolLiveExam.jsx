@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Police from "../../../assets/Policelogo.png";
+import Logo from "../../../assets/logo.png";
 import { GrSend } from "react-icons/gr";
 import { LuCircleArrowLeft } from "react-icons/lu";
 import { FiArrowRightCircle } from "react-icons/fi";
@@ -65,7 +65,7 @@ const SchoolLiveExam = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `https://congozi-backend.onrender.com/api/v1/exams/${examId}`,
+          `https://heroes-backend-wapq.onrender.com/api/v1/exams/${examId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -125,7 +125,7 @@ const SchoolLiveExam = () => {
   //     };
 
   //     const res = await fetch(
-  //       `https://congozi-backend.onrender.com/api/v1/responses/add`,
+  //       `https://heroes-backend-wapq.onrender.com/api/v1/responses/add`,
   //       {
   //         method: "POST",
   //         headers: {
@@ -204,7 +204,7 @@ const SchoolLiveExam = () => {
       };
 
       const res = await fetch(
-        `https://congozi-backend.onrender.com/api/v1/responses/add`,
+        `https://heroes-backend-wapq.onrender.com/api/v1/responses/add`,
         {
           method: "POST",
           headers: {
@@ -449,7 +449,7 @@ const SchoolLiveExam = () => {
                         ✖
                       </button>
                       <img
-                        src={Police}
+                        src={Logo}
                         alt="Logo"
                         className="w-48 h-48 justify-center"
                       />

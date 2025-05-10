@@ -38,7 +38,7 @@ const StudentExams = () => {
           },
         };
         const response = await axios.get(
-          "https://congozi-backend.onrender.com/api/v1/purchases/user",
+          "https://heroes-backend-wapq.onrender.com/api/v1/purchases/user",
           config
         );
         const result = response.data?.data;

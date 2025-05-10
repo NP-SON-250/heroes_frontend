@@ -3,7 +3,7 @@ import { navContents } from "../../Data/morkData";
 import { useLocation } from "react-router-dom";
 
 const ResponsiveMenu = ({ isOpen }) => {
-  const location = useLocation(); // Get current path
+  const location = useLocation();
 
   if (!isOpen) return null;
 
@@ -15,7 +15,7 @@ const ResponsiveMenu = ({ isOpen }) => {
       <div className="text-semibold bg-Total text-white">
         <ul className="flex flex-col justify-center items-start px-6 gap-6 py-6">
           {navContents.map((items) => {
-            const isActive = location.pathname === items.link; // Check if link matches current path
+            const isActive = location.pathname === items.link;
             return (
               <li key={items.id} className="relative">
                 <a

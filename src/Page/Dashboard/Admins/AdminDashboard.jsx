@@ -49,15 +49,15 @@ const AdminDashboard = () => {
 
         const [userRes, examRes, paymentRes] = await Promise.all([
           axios.get(
-            "https://congozi-backend.onrender.com/api/v1/users",
+            "https://heroes-backend-wapq.onrender.com/api/v1/users",
             config
           ),
           axios.get(
-            "https://congozi-backend.onrender.com/api/v1/exams",
+            "https://heroes-backend-wapq.onrender.com/api/v1/exams",
             config
           ),
           axios.get(
-            "https://congozi-backend.onrender.com/api/v1/purchases",
+            "https://heroes-backend-wapq.onrender.com/api/v1/purchases",
             config
           ),
         ]);

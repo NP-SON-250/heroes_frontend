@@ -3,14 +3,14 @@ import { AiOutlineNotification } from "react-icons/ai";
 import { PiFolderOpenDuotone } from "react-icons/pi";
 import { IoLanguageOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
-import Police from "../../assets/Policelogo.png";
-import { useNavigate,useLocation } from "react-router-dom";
+import Logo from "../../assets/logo.png";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Topbar = ({ currentSection, role = "students", onSignOut }) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
-  
+
   const handleNavClick = (path) => {
     window.location.href = path;
   };
@@ -50,7 +50,7 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
     setUser(null);
     navigate("/kwinjira", { replace: true });
   };
-  
+
   return (
     <div
       className={`fixed top-0 right-0 md:px-24 px-4 flex justify-between items-center w-full h-[11vh] shadow bg-Total`}
@@ -59,7 +59,7 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
       {/* Logo and Role */}
       <div className="flex justify-center items-center gap-5">
         <Link to={`/${role}/home`}>
-          <img src={Police} alt="Logo" className="h-12 text-center" />
+          <img src={Logo} alt="Logo" className="h-12 text-center" />
         </Link>
         <div className="text-xs font-bold text-white">{currentSection}</div>
       </div>

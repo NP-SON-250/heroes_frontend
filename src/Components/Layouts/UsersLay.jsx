@@ -50,7 +50,7 @@ const UsersLay = ({ role }) => {
         <div className="md:fixed md:bottom-0 md:left-0 md:right-0 md:block hidden w-full">
           <div className="flex justify-center bg-Unpaid">
             <p className="md:p-[6px] p-5 text-blue-900 md:text-2xl text-xs font-bold text-center uppercase">
-              &copy; {getCurrentYear()} Congozi Expert Technical Unity{" "}
+              &copy; {getCurrentYear()} Heroes Technology{" "}
               <span className="normal-case">Limited</span>
             </p>
           </div>

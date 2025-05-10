@@ -46,12 +46,12 @@ import SchoolLiveLearn from "./Page/Dashboard/schools/SchoolLiveLearn";
 import LiveLearn from "./Page/Dashboard/Students/LiveLearn";
 const App = () => {
   const { userRole, loading } = useUserContext();
-  // onContextMenu={(e) => e.preventDefault()}
+  // onContextMenu={(e) => e.preventDefault()} select-none
   if (loading) return <div>Loading...</div>;
   return (
     <>
       <div
-        className="overflow-x-hidden font-Poppins select-none"
+        className="overflow-x-hidden font-Poppins"
       >
         <Routes>
           {/* Landing Routes */}

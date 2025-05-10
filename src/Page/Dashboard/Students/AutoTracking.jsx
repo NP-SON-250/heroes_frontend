@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MdOutlineContentPasteSearch } from "react-icons/md";
-import Police from "../../../assets/Policelogo.png";
+import Logo from "../../../assets/logo.png";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import ContinueCard from "../../../Components/Cards/ContinueCard";
 import ConfirmCard from "../../../Components/Cards/ConfirmCard";
@@ -31,7 +31,7 @@ const AutoTracking = () => {
         try {
           const token = localStorage.getItem("token");
           const response = await axios.get(
-            `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`,
+            `https://heroes-backend-wapq.onrender.com/api/v1/purchases/access/${examCode}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -100,7 +100,7 @@ const AutoTracking = () => {
         {!isSearched ? (
           <div className="flex flex-col justify-center">
             <div className="flex justify-center items-center">
-              <img src={Police} alt="Police Logo" className="w-24 py-3" />
+              <img src={Logo} alt="Logo   Logo" className="w-24 py-3" />
             </div>
             <div className="flex flex-col gap-4">
               <p className="capitalize font-bold text-lg text-center">

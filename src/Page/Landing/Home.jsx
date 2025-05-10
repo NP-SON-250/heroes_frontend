@@ -34,7 +34,7 @@ const Home = () => {
           <div>
             <p className="text-start md:text-md text-md text-blue-500 py-4 px-0">
               Uhereye uyuminsi iyandikishe kuri sisteme yacu, maze wisanzure
-              n'ibisubizo bigezweho Congozi yabazaniye; Aho ushobora
+              n'ibisubizo bigezweho Heroes yabazaniye; Aho ushobora
               kwimenyereza gukora ibizamini bya provisoir Online, ndetse no
               kwiga ukoresheje ibizamini bisubije neza!
             </p>
@@ -61,7 +61,7 @@ const Home = () => {
           {/* Paragraph */}
           <div className="flex flex-col">
             <p className="text-white text-start md:px-16 px-5 py-2 font-semibold">
-              Ubu nawe wakoresha igihe cyawe neza! Hamwe na Congozi Expert,
+              Ubu nawe wakoresha igihe cyawe neza! Hamwe na Heroes Technology,
               wakwiga amategeko y'umuhanda wifashishije uburyo bugezweho bwo
               kwimenyereza gukora ikizamini cya provisoir aribwo Online wibereye
               iwawe.
@@ -73,19 +73,19 @@ const Home = () => {
             <div className="flex justify-start md:px-2 px-5 items-center text-start gap-4 ">
               <LuPhoneCall className="text-white text-2xl font-semibold" />
               <p className="text-center text-lg text-white">
-                +250 783 905 790 | 722 558 842
+              +250 792 337 053 | 789 394 424
               </p>
             </div>
             <div className="flex justify-start md:px-0 px-5 items-center gap-4">
               <MdEmail className="text-white text-2xl font-semibold" />
               <p className="text-center text-lg text-white underline">
-                info@congozi.rw
+              herostechnology.ltd@gmail.com
               </p>
             </div>
             <div className="flex justify-start md:px-0 px-5 items-center gap-4">
               <HiHome className="text-white text-2xl font-semibold" />
               <p className="text-center text-lg text-white">
-                Nyagatare, Rwanda
+                Huye, Rwanda
               </p>
             </div>
           </div>
