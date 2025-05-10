@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import Logo from "../../assets/logo.png";
 import { useNavigate, useLocation } from "react-router-dom";
 
-const Topbar = ({ currentSection, role = "students", onSignOut, onLogout }) => {
+const Topbar = ({ currentSection, role = "students", onSignOut }) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
@@ -14,7 +14,6 @@ const Topbar = ({ currentSection, role = "students", onSignOut, onLogout }) => {
   const handleNavClick = (path) => {
     window.location.href = path;
   };
-  
   const studentTop = [
     {
       id: 1,
@@ -45,19 +44,11 @@ const Topbar = ({ currentSection, role = "students", onSignOut, onLogout }) => {
     setMenuVisible(!menuVisible);
   };
 
-  const handleLogoutClick = () => {
-    if (onLogout) {
-      onLogout();
-    } else {
-      // Fallback behavior if onLogout isn't provided
-      const isConfirmed = window.confirm("Are you sure you want to logout?");
-      if (isConfirmed) {
-        localStorage.clear();
-        if (onSignOut) onSignOut();
-        setUser(null);
-        navigate("/kwinjira", { replace: true });
-      }
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/kwinjira", { replace: true });
   };
 
   return (
@@ -118,7 +109,7 @@ const Topbar = ({ currentSection, role = "students", onSignOut, onLogout }) => {
       {/* Mobile Dropdown Menu */}
       {menuVisible && (
         <div className="absolute top-[11vh] right-0 w-full bg-gray-800 py-4 md:hidden z-[999]">
-          <div className="flex flex-col justify-center items-center gap-1 mb-4">
+          <div className="flex  flex-col justify-center items-center gap-1 mb-4">
             {user?.profile ? (
               <img
                 src={
@@ -152,7 +143,12 @@ const Topbar = ({ currentSection, role = "students", onSignOut, onLogout }) => {
             ))}
             <div
               className="flex items-center px-3 pt-28 cursor-pointer"
-              onClick={handleLogoutClick}
+              onClick={() => {
+                localStorage.clear();
+                if (onSignOut) onSignOut();
+                setUser(null);
+                window.location.href = "/";
+              }}
             >
               <PiFolderOpenDuotone className="mr-3 text-whte" />
               <p className="text-md font-medium">Log Out</p>
