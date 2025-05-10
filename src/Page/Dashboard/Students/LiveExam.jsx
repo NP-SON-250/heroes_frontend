@@ -7,7 +7,7 @@ import { LuCircleArrowLeft } from "react-icons/lu";
 import { FiArrowRightCircle } from "react-icons/fi";
 import DescriptionCard from "../../../Components/Cards/DescriptionCard";
 import ExamTimer from "../../../Components/ExamTimer";
-import Topbar from "../../../Components/Topbar";
+import Topbar from "../../../Components/Sidebar/Topbar";
 
 const LiveLearn = () => {
   const [examCode, setExamCode] = useState("");
