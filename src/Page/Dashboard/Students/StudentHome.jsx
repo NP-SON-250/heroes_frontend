@@ -14,7 +14,6 @@ const StudentHome = () => {
   const [failedExams, setFailedExams] = useState([]);
 
   useEffect(() => {
-    // Fetch exam data once the component is mounted
     const token = localStorage.getItem("token");
 
     const fetchAllExams = async () => {
@@ -79,19 +78,19 @@ const StudentHome = () => {
       <div className="grid md:grid-cols-3 grid-cols-1 w-full md:px-0 px-12 gap-12 md:pt-2 py-5 md:gap-12">
         <StHomeCard
           bgColor="bg-blue-900"
-          title="Total Exams"
+          title="Ibizamini Byose"
           count={totalExams.length}
         />
         <StHomeCard
           bgColor="bg-red-700"
-          title="Expired Exams"
+          title="Ibizamini Byarangiye"
           count={expiredExams.length}
         />
 
         <Link to="/students/unpaidexams" className="block w-full">
           <StHomeCard
             bgColor="bg-yellow-700"
-            title="Unpaid Exams"
+            title="Ibizamini Bitishyuwe"
             count={unpaidExams.length}
           />
         </Link>
@@ -99,19 +98,19 @@ const StudentHome = () => {
         <Link to="/students/waitingexams" className="block w-full">
           <StHomeCard
             bgColor="bg-blue-700"
-            title="Waiting Exams"
+            title="Ibizamini Bitarakorwa"
             count={waitingExams.length}
           />
         </Link>
 
         <StHomeCard
           bgColor="bg-green-700"
-          title="Passed Exams"
+          title="Ibizamini Watsinze"
           count={passedExams.length}
         />
         <StHomeCard
           bgColor="bg-orange-600"
-          title="Failed Exams"
+          title="Ibizamini Watsinzwe"
           count={failedExams.length}
         />
       </div>

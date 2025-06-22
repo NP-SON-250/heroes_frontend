@@ -22,18 +22,17 @@ const RestPassword = () => {
             </p>
           </div>
           <p className=" text-lg md:px-20 p-2">
-            Andika nomero ya telefone ukoresha cya imeri yawe maze wemeze
+            Andika nomero ya telefone ukoresha cyangwa imeri yawe maze wemeze
             kohererezwa ijambobanga rishya!
           </p>
           <div className="flex flex-col items-start gap-4 md:w-[70%] w-full">
             <LoginInputs
-              label="Nomero Yawe Ya Telefone"
+              label="Telefone cg Email"
               type="text"
               icon={<FaUser />}
-              placeholder="07XXXXXXXX"
+              placeholder="07XXX cg Email"
             />
 
-            {/* Radio Buttons for SMS or Email */}
             <div className="flex flex-col justify-center items-center w-full">
               <p className="text-center">Uburyo bwo kubona ubutumwa</p>
               <div className="flex justify-between items-center gap-6 mt-2">
@@ -59,13 +58,11 @@ const RestPassword = () => {
             </div>
           </div>
 
-          {/* Return Button */}
           <button className="flex justify-center items-center text-2xl py-1 px-6 gap-5 bg-Unpaid rounded-md hover:bg-yellow-600">
             <FiSend className="text-blue-800 text-xl" />
             Emeza Gusaba
           </button>
 
-          {/* Links */}
           <div className="md:flex-row flex-col flex justify-center items-center md:gap-10 gap-4">
             <Link to={"/kwinjira"}>
               <p className="flex justify-center items-center gap-2 text-blue-500 text-md">

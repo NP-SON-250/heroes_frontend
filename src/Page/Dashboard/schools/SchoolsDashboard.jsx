@@ -10,10 +10,9 @@ const SchoolsDashboard = () => {
   const [totalAccounts, setTotalAccounts] = useState([]);
   const [expiredAccounts, setExpiredAccounts] = useState([]);
   const [waitingAccounts, setWaitingAccounts] = useState([]);
-  const [userData, setUserData] = useState(null); // Store user data
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    // Load user data from localStorage if available
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       try {
@@ -23,8 +22,6 @@ const SchoolsDashboard = () => {
         console.error("Failed to load user data:", err);
       }
     }
-
-    // Fetch account data once the component is mounted
     const token = localStorage.getItem("token");
 
     const fetchAllAccounts = async () => {
@@ -71,24 +68,22 @@ const SchoolsDashboard = () => {
   return (
     <div className="flex flex-col justify-center items-start md:px-5 gap-2 bg-white md:p-2">
       <WelcomeDear userData={userData} />
-
-      {/* Cards Section */}
       <div className="grid md:grid-cols-3 grid-cols-1 w-full md:px-0 px-12 gap-12 md:pt-2 py-5 md:gap-12">
         <StHomeCard
           bgColor="bg-blue-900"
-          title="Total Accounts"
+          title="Konte Zose"
           count={totalAccounts.length}
         />
         <StHomeCard
           bgColor="bg-[#F08080]"
-          title="Expired Accounts"
+          title="Konte Zarangiye"
           count={expiredAccounts.length}
         />
 
         <Link to="/schools/unpaidaccounts" className="block w-full">
           <StHomeCard
             bgColor="bg-[#FACC2E]"
-            title="Unpaid Accounts"
+            title="Konte Zitishyuye"
             count={unpaidAccounts.length}
           />
         </Link>
@@ -96,7 +91,7 @@ const SchoolsDashboard = () => {
         <Link to="/schools/waitingaccounts" className="block w-full">
           <StHomeCard
             bgColor="bg-blue-200"
-            title="Waiting Accounts"
+            title="Konte Zishyuye"
             count={waitingAccounts.length}
           />
         </Link>

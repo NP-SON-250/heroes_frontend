@@ -11,7 +11,7 @@ import ExamTimer from "../../../Components/ExamTimer";
 const LiveLearn = () => {
   const [examCode, setExamCode] = useState("");
   const [paidExam, setPaidExam] = useState(null);
-  const [testExam, setTestExam] = useState(null);
+  const [gukoraExam, setgukoraExam] = useState(null);
   const [examToDo, setExamToDo] = useState(null);
   const [examQuestions, setExamQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState(0);
@@ -20,7 +20,7 @@ const LiveLearn = () => {
   const [interactedQuestions, setInteractedQuestions] = useState([]);
 
   const location = useLocation();
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
 
   const token = useMemo(() => {
     if (typeof window !== "undefined") {
@@ -82,7 +82,7 @@ const LiveLearn = () => {
     }
   }, [examToDo, examCode]);
 
-  const fetchTestExam = useCallback(async () => {
+  const fetchgGukoraExam = useCallback(async () => {
     try {
       const number = paidExam?.number;
       if (!number) return;
@@ -99,22 +99,22 @@ const LiveLearn = () => {
       if (!examPurchased) return;
 
       const res = await axios.get(
-        `https://heroes-backend-wapq.onrender.com/api/v1/exams/test/${number}`,
+        `https://heroes-backend-wapq.onrender.com/api/v1/exams/gukora/${number}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      const testData = res.data.data;
-      setTestExam(testData);
+      const gukoraData = res.data.data;
+      fetchgGukoraExam(gukoraData);
       if (typeof window !== "undefined") {
-        localStorage.setItem("test_exam_data", JSON.stringify(testData));
+        localStorage.setItem("gukora_exam_data", JSON.stringify(gukoraData));
       }
     } catch (error) {
-      console.error("Error fetching test exam:", error);
+      console.error("Error fetching gukora exam:", error);
     }
   }, [examCode, paidExam, token]);
 
   const handleShowPaymentPopup = async () => {
-    await fetchTestExam();
-    if (testExam) {
+    await fetchgukoraExam();
+    if (gukoraExam) {
       setPaymentPopup(true);
     }
   };
@@ -122,12 +122,11 @@ const LiveLearn = () => {
   const handlePayLaterClick = async () => {
     try {
       await axios.post(
-        `https://heroes-backend-wapq.onrender.com/api/v1/purchases/${testExam._id}`,
+        `https://heroes-backend-wapq.onrender.com/api/v1/purchases/${gukoraExam._id}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setPaymentPopup(false);
-      navigate("/students/exams");
     } catch (error) {
       if (error.response?.status === 404) {
         alert("You have already purchased this exam.");
@@ -156,13 +155,16 @@ const LiveLearn = () => {
         await axios.delete(
           `https://heroes-backend-wapq.onrender.com/api/v1/purchases/access/${examCode}`
         );
-        navigate("/students/market");
+        navkwigate("/students/waitingexams", {
+          replace: true,
+          state: { reset: true },
+        });
       }
     } catch (error) {
       console.error("Error deleting exam purchase on timeout:", error);
     }
     localStorage.removeItem(`selectedAnswers_${examCode}`);
-  }, [examCode, navigate]);
+  }, [examCode, navkwigate]);
 
   return (
     <div className="flex flex-col bg-white md:p-2 gap-2">
@@ -190,14 +192,14 @@ const LiveLearn = () => {
               timeLeft={
                 <ExamTimer
                   accessCode={examCode}
-                  duration={3600}
+                  duration={2400}
                   onTimeout={handleTimeout}
                 />
               }
               access={examCode}
             />
 
-            <div className="flex flex-wrap justify-start py-1 md:gap-4 gap-2">
+            <div className="flex flex-wrap justify-center py-1 md:gap-4 gap-2">
               {examQuestions.map((q, idx) => {
                 const isCurrent = selectedQuestion === idx;
                 const isInteracted = interactedQuestions.includes(idx);
@@ -314,7 +316,7 @@ const LiveLearn = () => {
         </>
       )}
 
-      {paymentPopup && testExam && (
+      {paymentPopup && gukoraExam && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
           <div className="bg-Total p-4 rounded-lg md:w-1/2 h-1/2 flex justify-center items-center w-full relative">
             <button
@@ -328,14 +330,14 @@ const LiveLearn = () => {
               <div className="flex w-full flex-col bg-gray-300 rounded-lg">
                 <div className="flex flex-col justify-center items-center gap-1 py-5">
                   <h1 className="text-xl pt-1 text-Total font-bold">
-                    {testExam.title}: {testExam.number}
+                    {gukoraExam.title}: {gukoraExam.number}
                   </h1>
                   <div className="flex flex-col justify-center items-start">
                     <p className="text-Total">
-                      Exam Fees:{" "}
-                      <span className="font-bold">{testExam.fees} Rwf</span>
+                      Igiciro:{" "}
+                      <span className="font-bold">{gukoraExam.fees} Rwf</span>
                     </p>
-                    <p className="text-Total">Exam Type: {testExam.type}</p>
+                    <p className="text-Total">Ubwoko: {gukoraExam.type}</p>
                   </div>
                 </div>
                 <div className="pt-1">
@@ -343,7 +345,7 @@ const LiveLearn = () => {
                     className="flex items-center justify-center gap-4 text-lg py-1 px-4 rounded-md w-full text-white bg-yellow-500"
                     onClick={handlePayLaterClick}
                   >
-                    <BsCart /> Confirm Purchase
+                    <BsCart /> Saba Kwishyura
                   </button>
                 </div>
               </div>

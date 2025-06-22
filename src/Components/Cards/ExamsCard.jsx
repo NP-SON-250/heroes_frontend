@@ -20,9 +20,9 @@ const ExamsCard = ({
           </h1>
           <div className="flex flex-col justify-center items-start">
             <p className="text-Total">
-              Exam Fees: <span className="font-bold">{fees} Rwf</span>
+              Igiciro: <span className="font-bold">{fees} Rwf</span>
             </p>
-            <p className="text-Total">Exam Type: {type}</p>
+            <p className="text-Total">Ubwoko: {type}</p>
           </div>
         </div>
         <div className="pt-1">

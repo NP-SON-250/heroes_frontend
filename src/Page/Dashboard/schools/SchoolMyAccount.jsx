@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { FaCamera } from "react-icons/fa";
-
+import LoadingSpinner from "../../../Components/LoadingSpinner ";
 const SchoolMyAccount = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState("");
   const [showPasswordForm, setShowPasswordForm] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     companyName: "",
     tin: "",
@@ -19,7 +19,9 @@ const SchoolMyAccount = () => {
   });
 
   const [passwordData, setPasswordData] = useState({
-    password: "",
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
 
   const [profile, setProfile] = useState(null);
@@ -58,20 +60,80 @@ const SchoolMyAccount = () => {
     }
   };
 
+  const validatePasswordChange = () => {
+    if (!passwordData.currentPassword) {
+      toast.error("shyiramo Ijambobanga ryakera");
+      return false;
+    }
+    if (!passwordData.newPassword) {
+      toast.error("shyiramo Ijambobanga rishya");
+      return false;
+    }
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      toast.error("Ijambobanga rishyas ntirihura");
+      return false;
+    }
+    if (passwordData.newPassword.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user?._id) return toast.error("User not logged in");
 
     try {
-      const form = new FormData();
+      setIsLoading(true);
+      const token = localStorage.getItem("token");
 
       if (showPasswordForm) {
-        if (!passwordData.password) {
-          return toast.error("Please fill in password field");
+        if (!validatePasswordChange()) return;
+        try {
+          await axios.post(
+            `https://heroes-backend-wapq.onrender.com/api/v1/users/verify-password`,
+            {
+              userId: user._id,
+              password: passwordData.currentPassword,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+        } catch (error) {
+          toast.error("Ijambobanga ryakera is incorrect");
+          return;
         }
+        const form = new FormData();
+        form.append("password", passwordData.newPassword);
 
-        form.append("password", passwordData.password);
+        const response = await axios.put(
+          `https://heroes-backend-wapq.onrender.com/api/v1/users/${user._id}`,
+          form,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setMessage("Password updated successfully");
+        setMessageType("success");
+
+        setTimeout(() => {
+          setShowPasswordForm(false);
+          setPasswordData({
+            currentPassword: "",
+            newPassword: "",
+            confirmPassword: "",
+          });
+        }, 1000);
       } else {
+        const form = new FormData();
         for (let key in formData) {
           if (formData[key]) {
             form.append(key, formData[key]);
@@ -80,54 +142,42 @@ const SchoolMyAccount = () => {
         if (profile) {
           form.append("profile", profile);
         }
-      }
 
-      const token = localStorage.getItem("token");
+        const response = await axios.put(
+          `https://heroes-backend-wapq.onrender.com/api/v1/users/${user._id}`,
+          form,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-      const response = await axios.put(
-        `https://heroes-backend-wapq.onrender.com/api/v1/users/${user._id}`,
-        form,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const updatedUser = response.data.data;
-      if (!showPasswordForm) {
+        const updatedUser = response.data.data;
         localStorage.setItem("user", JSON.stringify(updatedUser));
-      }
 
-      setMessage(
-        showPasswordForm
-          ? "Password updated successfully"
-          : "Profile updated successfully"
-      );
-      setMessageType("success");
+        setMessage("Profile updated successfully");
+        setMessageType("success");
 
-      setTimeout(() => {
-        if (!showPasswordForm) {
+        setTimeout(() => {
           window.location.reload();
-        } else {
-          setShowPasswordForm(false);
-          setPasswordData({ password: "" });
-        }
-      }, 1000);
+        }, 1000);
+      }
     } catch (error) {
       console.error(error);
       setMessage(
         error?.response?.data?.message || "Failed to update information"
       );
       setMessageType("error");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="flex items-center justify-center">
       <div className="bg-white shadow-md rounded-lg md:p-1 p-6 w-full max-w-xl text-center">
-        {/* Message */}
         {message && (
           <div
             className={`text-sm mb-3 px-2 py-1 rounded ${
@@ -141,7 +191,7 @@ const SchoolMyAccount = () => {
         )}
 
         <h2 className="md:text-xs text-md font-bold text-blue-900 mb-1">
-          {showPasswordForm ? "Change Password" : "Your Profile"}
+          {showPasswordForm ? "Hindura Ijambobanga" : "Ifoto y'ikigo"}
         </h2>
 
         <form
@@ -150,7 +200,6 @@ const SchoolMyAccount = () => {
         >
           {!showPasswordForm ? (
             <>
-              {/* Profile Image */}
               <div className="relative w-24 h-24 mx-auto mb-1">
                 {preview && (
                   <img
@@ -169,15 +218,13 @@ const SchoolMyAccount = () => {
                   />
                 </label>
               </div>
-
-              {/* Profile Form Fields */}
               <input
                 type="text"
                 name="companyName"
                 value={formData.companyName}
                 onChange={handleChange}
-                placeholder="Company Name "
-                className="md:md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
+                placeholder="Company Name"
+                className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
               />
               <input
                 type="text"
@@ -185,7 +232,7 @@ const SchoolMyAccount = () => {
                 value={formData.tin}
                 onChange={handleChange}
                 placeholder="Tin Number"
-                className="md:md:w-1/2 w-full  px-4 md:text-xs text-md py-1 border rounded"
+                className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
               />
               <input
                 type="text"
@@ -193,7 +240,7 @@ const SchoolMyAccount = () => {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="Phone"
-                className="md:md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
+                className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
               />
               <input
                 type="email"
@@ -201,7 +248,7 @@ const SchoolMyAccount = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Email"
-                className="md:md:w-1/2 w-full  px-4 md:text-xs text-md py-1 border rounded"
+                className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
               />
               <input
                 type="text"
@@ -224,11 +271,30 @@ const SchoolMyAccount = () => {
             <>
               <input
                 type="password"
-                name="password"
-                value={passwordData.password}
+                name="currentPassword"
+                value={passwordData.currentPassword}
                 onChange={handleChange}
-                placeholder="New Password"
+                placeholder="Ijambobanga ryakera"
                 className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
+                required
+              />
+              <input
+                type="password"
+                name="newPassword"
+                value={passwordData.newPassword}
+                onChange={handleChange}
+                placeholder="Ijambobanga rishya"
+                className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
+                required
+              />
+              <input
+                type="password"
+                name="confirmPassword"
+                value={passwordData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Emeza Ijambobanga rishya"
+                className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
+                required
               />
             </>
           )}
@@ -238,15 +304,42 @@ const SchoolMyAccount = () => {
               type="submit"
               className="bg-blue-900 text-white px-6 py-1 rounded hover:bg-blue-800 mb-3"
             >
-              {showPasswordForm ? "Update Password" : "Save Changes"}
+              {showPasswordForm ? (
+                <>
+                  {isLoading ? (
+                    <>
+                      <LoadingSpinner size={5} strokeWidth={2} />
+                    </>
+                  ) : (
+                    <>Emeza Guhindura</>
+                  )}
+                </>
+              ) : (
+                <>
+                  {isLoading ? (
+                    <>
+                      <LoadingSpinner size={5} strokeWidth={2} />
+                    </>
+                  ) : (
+                    <>Emeza Guhindura</>
+                  )}
+                </>
+              )}
             </button>
 
             <button
               type="button"
-              onClick={() => setShowPasswordForm((prev) => !prev)}
+              onClick={() => {
+                setShowPasswordForm((prev) => !prev);
+                setPasswordData({
+                  currentPassword: "",
+                  newPassword: "",
+                  confirmPassword: "",
+                });
+              }}
               className="text-blue-600 hover:text-yellow-600"
             >
-              {showPasswordForm ? "Back to Profile" : "Change Password?"}
+              {showPasswordForm ? "Garuka Inyuma" : "Hindura Ijambobanga?"}
             </button>
           </div>
         </form>

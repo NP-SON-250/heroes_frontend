@@ -24,37 +24,37 @@ const Sidebar = ({ role = "students", onSignOut }) => {
   const sidebarMenu = {
     students: [
       {
-        name: "Home",
+        name: "Ahabanza",
         path: "/students/home",
         iconR: <HiHome />,
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "Examination Market",
+        name: "Isoko ry'ibizamini",
         path: "/students/market",
         iconR: <BsCart />,
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "Do Exams Online",
+        name: "Aho Bakorera Ikizamini",
         path: "/students/tracking",
         iconR: <PiFolderSimpleUserLight />,
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "My Examinations",
+        name: "Ibizamini Byanjye",
         path: "/students/exams",
         iconR: <IoIosMenu />,
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "My Profile",
+        name: "Umwirondoro Wanjye",
         path: "/students/profile",
         iconR: <FaUsersCog />,
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "School Account Market",
+        name: "Aho Bagurira konti y'ishuri",
         path: "/students/school",
         iconR: <FaGoogleScholar />,
         iconL: <IoIosArrowForward />,
@@ -62,31 +62,31 @@ const Sidebar = ({ role = "students", onSignOut }) => {
     ],
     schools: [
       {
-        name: "Home",
+        name: "Ahabanza",
         path: "/schools/home",
         iconR: <HiHome />,
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "Account Market",
+        name: "Isoko rya Konte",
         path: "/schools/account/market",
         iconR: <BsCart />,
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "Do Exams Online",
+        name: "gukora Ibizamini",
         path: "/schools/online",
         iconR: <PiFolderSimpleUserLight />,
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "My Examinations",
-        path: "/schools/exams",
+        name: "Konte Nishyuye",
+        path: "/schools/accounts",
         iconR: <IoIosMenu />,
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "My Profile",
+        name: "Umwirondoro wa Konte",
         path: "/schools/account",
         iconR: <FaUsersCog />,
         iconL: <IoIosArrowForward />,
@@ -138,7 +138,6 @@ const Sidebar = ({ role = "students", onSignOut }) => {
 
   return (
     <div className="container relative">
-      {/* Desktop Sidebar */}
       <div className="w-[300px] h-[82vh] px-4 py-4 overflow-y-auto shadow fixed bottom-[45px] left-0 md:block hidden z-[50]">
         <ul>
           {items.map((item, index) => (
@@ -168,12 +167,10 @@ const Sidebar = ({ role = "students", onSignOut }) => {
             }}
           >
             <RiLogoutCircleLine className="mr-3 text-blue-500" />
-            <p className="text-md font-medium">Sign Out</p>
+            <p className="text-md font-medium">Sohoka</p>
           </div>
         </ul>
       </div>
-
-      {/* Mobile Bottom Navigation */}
       <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-400 py-1 px-1 md:hidden z-[999]">
         <ul className="flex justify-around items-center">
           {visibleItems.map((item, index) => (
@@ -216,12 +213,10 @@ const Sidebar = ({ role = "students", onSignOut }) => {
               <div className="icon">
                 <MdMoreHoriz size={24} />
               </div>
-              <span className="text-xs font-bold">More</span>
+              <span className="text-xs font-bold">Ibindi</span>
             </button>
           </li>
         </ul>
-
-        {/* More Items Dropdown */}
         {showAll && (
           <ul className="fixed bottom-[80px] left-0 w-full bg-white py-1 px-0 grid grid-cols-2 gap-4">
             {hiddenItems.map((item, index) => (

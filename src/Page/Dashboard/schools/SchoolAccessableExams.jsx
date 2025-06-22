@@ -20,9 +20,7 @@ const SchoolAccessableExams = () => {
 
   const location = useLocation();
   const { accessCode } = queryString.parse(location.search);
-  const navigate = useNavigate();
-
-  // Fetch all granted exams
+  const navkwigate = useNavigate();
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -43,8 +41,6 @@ const SchoolAccessableExams = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  // Check accessCode validity
   useEffect(() => {
     if (accessCode && exam.data.length > 0) {
       const matchedExam = exam.data.find((e) => e.accessCode === accessCode);
@@ -85,9 +81,9 @@ const SchoolAccessableExams = () => {
   const handleDoExam = (exam) => {
     const id = exam._id;
     if (id) {
-      navigate(`/schools/accessedexam?id=${id}`);
+      navkwigate(`/schools/accessedexam?id=${id}`);
     } else {
-      console.error("Nta code yo gukora ikikizamini ufite.");
+      console.error("Nta code yo gugukora ikikizamini ufite.");
     }
   };
 
@@ -98,17 +94,17 @@ const SchoolAccessableExams = () => {
   return (
     <div className="flex flex-col justify-around items-center md:px-5 gap-1 bg-white md:p-2">
       <WelcomeDear />
-      <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
+      <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-12 gap-1 px-3 py-4">
         <input
           type="text"
-          placeholder="---Select Exam Type---"
+          placeholder="--ubwoko bw'ikizami--"
           value={type}
           onChange={(e) => setType(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl"
         />
         <input
           type="text"
-          placeholder="---Filter Exam Fees---"
+          placeholder="---Shaka n'igiciro---"
           value={fees}
           onChange={(e) => setFees(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl"
@@ -116,7 +112,7 @@ const SchoolAccessableExams = () => {
         <div className="w-full px-3 md:flex hidden">
           <input
             type="search"
-            placeholder="Search Everything"
+            placeholder="---Ubwoko, igiciro, nimero byikizami---"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -127,7 +123,7 @@ const SchoolAccessableExams = () => {
       <div className="w-full px-3 pb-3 flex md:hidden">
         <input
           type="search"
-          placeholder="Search Everything"
+          placeholder="---Ubwoko, igiciro, nimero byikizami---"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -139,9 +135,11 @@ const SchoolAccessableExams = () => {
       ) : (
         <div className="grid md:grid-cols-3 w-full gap-4 md:gap-3 py-1">
           {currentExams.map((exam, index) => {
-            const isLearn = exam.type.toLowerCase().includes("learn");
-            const buttonColor = isLearn ? "bg-yellow-500" : "bg-green-500";
-            const buttonText = isLearn ? "Learn Exam" : "Do Exam";
+            const iskwiga = exam.type.toLowerCase().includes("kwiga");
+            const buttonColor = iskwiga ? "bg-yellow-500" : "bg-green-500";
+            const buttonText = iskwiga
+              ? "kwiga ikizamini"
+              : "Gugukora ikizamini";
             return (
               <ExamsCard
                 key={index}
@@ -160,7 +158,7 @@ const SchoolAccessableExams = () => {
       )}
 
       {totalPages > 1 && (
-        <div className="flex justify-around md:gap-[830px] gap-[120px] md:pb-0 pt-3 px-10">
+        <div className="flex justify-around md:gap-[700px] gap-[120px] md:pb-0 pt-3 px-10">
           <button
             className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
               currentPage === 0 ? "opacity-50" : ""

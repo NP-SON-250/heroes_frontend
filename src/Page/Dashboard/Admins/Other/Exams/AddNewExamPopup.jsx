@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import axios from "axios";
-
+import LoadingSpinner from "../../../../../Components/LoadingSpinner ";
 const AddNewExamPopup = ({ setShowAddExamPopup, onExamAdded }) => {
   const [examTitle, setExamTitle] = useState("");
   const [examFees, setExamFees] = useState("");
   const [examNumber, setExamNumber] = useState("");
   const [examType, setExamType] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSave = async () => {
     try {
+      setIsLoading(true);
       const newExam = {
         number: examNumber,
         title: examTitle,
@@ -28,6 +30,8 @@ const AddNewExamPopup = ({ setShowAddExamPopup, onExamAdded }) => {
       }
     } catch (error) {
       console.error("Error adding new exam:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -70,8 +74,8 @@ const AddNewExamPopup = ({ setShowAddExamPopup, onExamAdded }) => {
               className="w-full border border-blue-900/20 rounded px-3 py-2 mt-1"
             >
               <option value="">---</option>
-              <option value="learn">learn</option>
-              <option value="test">test</option>
+              <option value="kwiga">kwiga</option>
+              <option value="gukora">gukora</option>
             </select>
           </div>
           <div>
@@ -99,7 +103,13 @@ const AddNewExamPopup = ({ setShowAddExamPopup, onExamAdded }) => {
             onClick={handleSave}
             className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
-            Save
+            {isLoading ? (
+              <>
+                <LoadingSpinner size={5} strokeWidth={2} />
+              </>
+            ) : (
+              "Save Exam"
+            )}
           </button>
         </div>
       </div>

@@ -4,8 +4,6 @@ import Navbar from "../Navbar/Navbar";
 
 const LandingLay = () => {
   const [applyHeight, setApplyHeight] = useState(false);
-
-  // Get current year for footer
   const getCurrentYear = () => new Date().getFullYear();
 
   useEffect(() => {
@@ -33,12 +31,9 @@ const LandingLay = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Navbar */}
       <div className="md:max-h-[10vh]">
         <Navbar />
       </div>
-
-      {/* Main Content */}
       <div
         className={`flex flex-col flex-grow`}
         style={
@@ -50,12 +45,10 @@ const LandingLay = () => {
         <div className="flex-grow">
           <Outlet />
         </div>
-
-        {/* Footer */}
         <div className="md:fixed md:bottom-0 md:left-0 md:right-0 w-full">
           <div className="flex justify-center bg-Unpaid">
             <p className="p-4 text-blue-900 md:text-xs text-xs font-bold text-center uppercase">
-              &copy; {getCurrentYear()} Heroes Technology{" "}
+              &copy; {getCurrentYear()} Congozi Expert Technical Unity{" "}
               <span className="normal-case">Limited</span>
             </p>
           </div>

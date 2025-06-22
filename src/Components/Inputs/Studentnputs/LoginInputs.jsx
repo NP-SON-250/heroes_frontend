@@ -3,21 +3,16 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const LoginInputs = ({ label, type, placeholder, value, onChange, icon }) => {
   const [showPassword, setShowPassword] = useState(false);
-
-  // Determine actual input type
   const inputType = type === "password" && showPassword ? "text" : type;
 
   return (
     <div className="flex flex-col gap-3 w-full md:pl-4 px-4">
-      {/* Label */}
       <div className="flex gap-2 justify-start items-center">
         <div className="flex justify-center items-center p-2 bg-blue-500 rounded-full">
           <span className="text-white">{icon}</span>
         </div>
         <label className="text-gray-700 font-medium">{label}:</label>
       </div>
-
-      {/* Input Field with Toggle Icon */}
       <div className="relative w-full">
         <input
           type={inputType}

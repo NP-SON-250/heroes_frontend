@@ -19,9 +19,9 @@ const AccountCard = ({
           </h1>
           <div className="flex flex-col justify-center items-start">
             <p className="text-Total">
-            Acount Fees: <span className="font-bold">{fees} Rwf</span>
+              Igiciro: <span className="font-bold">{fees} Rwf</span>
             </p>
-            <p className="text-Total">Valid in: {validIn} Days</p>
+            <p className="text-Total">Iminsi: {validIn}</p>
           </div>
         </div>
         <div className="pt-1">

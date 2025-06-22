@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
-import Logo from "../../assets/logo.png";
+import Logo from "../../assets/Policelogo.png";
 import { navContents } from "../../Data/morkData";
 import { MdMenu, MdOutlineClose } from "react-icons/md";
 import ResponsiveMenu from "./ResponsiveMenu";
@@ -16,15 +16,12 @@ const Navbar = () => {
     <>
       <div className="fixed top-0 left-0 bg-Total z-50 w-full shadow-md">
         <div className="flex container justify-between items-center">
-          {/* Logo Section */}
           <div className="flex justify-center items-center md:px-0 px-4">
             <Link to={"/"}>
               <img src={Logo} alt="" className="w-14 py-1" />
             </Link>
           </div>
-
-          {/* Menu Section */}
-          <div className="md:block hidden py-1 px-10">
+          <div className="md:block hidden border border-Waiting rounded-md py-1 px-10">
             <ul className="flex items-center gap-6 text-white">
               {navContents.map((items) => {
                 const isActive = location.pathname === items.link;
@@ -43,23 +40,20 @@ const Navbar = () => {
               })}
             </ul>
           </div>
-
-          {/* Button Section */}
           <Link to={"/kwinjira"}>
             <div
-              className={`flex justify-center items-center text-white hover:text-yellow-700 gap-2 px-2 py-1 rounded-3xl cursor-pointer ${
+              className={`flex justify-center items-center gap-2 px-2 py-1 rounded-3xl cursor-pointer ${
                 isDisabled
-                  ? "text-gray-500 cursor-not-allowed"
-                  : "text-white hover:text-yellow-700"
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-Unpaid/95 hover:bg-yellow-700"
               }`}
             >
-              {/* Icon */}
-              <div className="bg-Unpaid/95 hover:bg-white w-6 h-6 p-2 flex justify-center items-center rounded-full">
+              <div className="bg-white w-6 h-6 p-2 flex justify-center items-center rounded-full">
                 <FaUser />
               </div>
               <button
-                className={`text-xl  pr-4 font-semibold ${
-                  isDisabled ? "opacity-50 cursor-pointer" : ""
+                className={`text-xl text-blue-900 pr-4 font-semibold ${
+                  isDisabled ? "opacity-50" : ""
                 }`}
                 disabled={isDisabled}
               >
@@ -67,8 +61,6 @@ const Navbar = () => {
               </button>
             </div>
           </Link>
-
-          {/* Mobile hamburger menu Section */}
           <div className="md:hidden" onClick={() => setIsOpen((prev) => !prev)}>
             {isOpen ? (
               <MdOutlineClose className=" text-white hover:text-Unpaid/95 pr-4 cursor-pointer text-5xl" />
@@ -78,8 +70,6 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-
-      {/* Responsive side */}
       <ResponsiveMenu isOpen={isOpen} />
     </>
   );

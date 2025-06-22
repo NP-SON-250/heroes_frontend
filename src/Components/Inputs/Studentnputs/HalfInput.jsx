@@ -2,10 +2,7 @@ const HalfInput  = ({ label, type = "text", placeholder, value, onChange, name, 
   const inputId = id || name || label.toLowerCase().replace(/\s+/g, "-");
   return (
     <div className="flex md:flex-row flex-col gap-3 w-full md:pl-4  px-4">
-      {/* Label */}
       <label htmlFor={inputId} className="text-gray-700 font-medium md:w-[30%] w-full">{label}:</label>
-
-      {/* Input Field */}
       <input
         id={inputId}
         name={name}

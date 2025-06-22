@@ -7,7 +7,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import queryString from "query-string";
 import axios from "axios";
 
-// Utility: Calculate remaining days from today to endDate
 const getRemainingDays = (endDate) => {
   const today = new Date();
   const end = new Date(endDate);
@@ -83,7 +82,7 @@ const SchoolWaiting = () => {
     (currentPage + 1) * accountsPerPage
   );
 
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
 
   const handleViewExams = (account) => {
     const remainingDays = getRemainingDays(account.endDate);
@@ -99,7 +98,7 @@ const SchoolWaiting = () => {
 
     if (account.accessCode) {
       const accessCode = account.accessCode;
-      navigate(`/schools/accessableexams?accessCode=${accessCode}`);
+      navkwigate(`/schools/accessableexams?accessCode=${accessCode}`);
     } else {
       console.error("No access code available to show exams.");
     }
@@ -111,25 +110,25 @@ const SchoolWaiting = () => {
         <WelcomeDear />
 
         {soonToExpireAccounts.length > 0 && (
-          <div className="w-[90%] bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md mb-3">
-            ⚠️ <strong>Heads up!</strong> You have {soonToExpireAccounts.length}{" "}
-            account
-            {soonToExpireAccounts.length > 1 ? "s" : ""} expiring within 1 day.
-            Make sure to use them in time!
+          <div className="md:w-[90%] w-full bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md mb-3">
+            <strong>Kumenyesha!</strong> Ufite Konte{" "}
+            {soonToExpireAccounts.length}{" "}
+            {soonToExpireAccounts.length > 1 ? "s" : ""} zizarangira mumunsi 1.
+            Gerageza uzikoreshe zitararangira!
           </div>
         )}
 
-        <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
+        <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-12 gap-1 px-3 py-4">
           <input
             type="text"
-            placeholder="---Select account validIn---"
+            placeholder="---Shaka konte n'iminsi imara ---"
             value={validIn}
             onChange={(e) => setValidIn(e.target.value)}
             className="border-2 border-blue-500 p-2 rounded-xl"
           />
           <input
             type="text"
-            placeholder="---Filter account Fees---"
+            placeholder="---Shaka konte n'igiciro---"
             value={fees}
             onChange={(e) => setFees(e.target.value)}
             className="border-2 border-blue-500 p-2 rounded-xl"
@@ -137,7 +136,7 @@ const SchoolWaiting = () => {
           <div className="w-full px-3 md:flex hidden">
             <input
               type="search"
-              placeholder="Search Everything"
+              placeholder="Shaka konte n'igiciro cg iminsi"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -148,7 +147,7 @@ const SchoolWaiting = () => {
         <div className="w-full px-3 pb-3 flex md:hidden">
           <input
             type="search"
-            placeholder="Search Everything"
+            placeholder="Shaka konte n'igiciro cg iminsi"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -167,15 +166,15 @@ const SchoolWaiting = () => {
               return (
                 <AccountCard
                   key={index}
-                  title={`Account ${
-                    currentPage * accountsPerPage + index + 1
-                  }: ${account.itemId.title}`}
+                  title={`Konte ${currentPage * accountsPerPage + index + 1}: ${
+                    account.itemId.title
+                  }`}
                   fees={account.itemId.fees}
                   validIn={account.itemId.validIn}
                   remainingDays={remainingDays}
                   onPurchase={() => handleViewExams(account)}
                   icon={<FaRegEye />}
-                  button={"View Exams"}
+                  button={"Reba Ibizamini"}
                   buttonColor={buttonColor}
                 />
               );
@@ -184,7 +183,7 @@ const SchoolWaiting = () => {
         )}
 
         {totalPages > 1 && (
-          <div className="flex justify-around md:gap-[830px] gap-[120px] md:pb-0 pt-3 px-10">
+          <div className="flex justify-around md:gap-[700px] gap-[120px] md:pb-0 pt-3 px-10">
             <div>
               <button
                 className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
@@ -206,7 +205,7 @@ const SchoolWaiting = () => {
                 }
                 disabled={currentPage === totalPages - 1}
               >
-                Izikurira
+                Izikurikira
                 <FaArrowAltCircleRight size={24} />
               </button>
             </div>

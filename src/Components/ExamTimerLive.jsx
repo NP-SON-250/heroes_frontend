@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+
 
 const Timer = ({ initialTime, onTimeEnd, examId, examFinished }) => {
   const [timeLeft, setTimeLeft] = useState(initialTime);
   const [timeEnded, setTimeEnded] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (examFinished || !examId) return;
@@ -14,8 +13,6 @@ const Timer = ({ initialTime, onTimeEnd, examId, examFinished }) => {
       ? parseInt(storedTime, 10)
       : initialTime;
     setTimeLeft(initialTimeValue);
-    
-    // If stored time is 0, immediately end the exam
     if (storedTime && parseInt(storedTime, 10) <= 0) {
       setTimeEnded(true);
       onTimeEnd();

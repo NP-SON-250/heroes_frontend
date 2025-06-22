@@ -7,7 +7,6 @@ const Services = () => {
   return (
     <div className="pt-20 px-4">
       <div className="flex flex-col justify-center items-center border border-blue-500 rounded-md px-10 pt-4">
-        {/* Title */}
         <div className="flex justify-center items-center gap-4 bg-Total md:w-[30%] py-1 px-5 rounded-full">
           <CgAlbum className="text-white text-xl" />
           <p
@@ -17,35 +16,33 @@ const Services = () => {
             Serivisi zacu
           </p>
         </div>
-        {/* Service contents */}
         <div className="flex md:flex-row flex-col justify-center items-center pt-2 gap-8">
           <div className="flex justify-center items-center flex-col gap-2">
             <img src={Service1} alt="" className="md:h-[40vh] rounded-md" />
             <p className="text-sm text-blue-500 text-start pl-10 uppercase">
-              muri heroes driving school tukwigisha aho waba uri hose kw' is
+              muri congozi driving school tukwigisha aho waba uri hose kw' isi
             </p>
           </div>
           <div className="flex justify-center items-center flex-col gap-2">
             <img src={Service2} alt="" className="md:h-[40vh] rounded-md" />
             <p className="text-sm text-blue-500 text-start pl-0 uppercase">
-              dutanga amasomo mu buryo bw' imnonankubone
+              dutanga amasomo mu buryo bw' imbonankubone
             </p>
           </div>
           <div className="flex justify-center items-center flex-col gap-2 pb-4">
             <img src={Service3} alt="" className="md:h-[40vh] rounded-md" />
             <p className="text-sm text-blue-500 text-start pl-10 uppercase">
-              dufite ikoranabuhanga ryigisha umuntu ari no muyindi mirimo
+              dufite igukoranabuhanga ryigisha umuntu ari no muyindi mirimo
             </p>
           </div>
         </div>
-        {/* Descriptions */}
         <div className=" pb-4 text-md px-10">
           <p>
             Singombwa ko uvunwa no kuza mw'ishuri, twakira n'abifuza kwiga
-            hifashishijwe ikoranabuhanga ryacu kuko muri Heroes ushobora
-            guhitamo kwiga imbonankubone cyagwa ukifashisha uburyo
-            bw'ikoranabuhanga rya Heroes. Mumashuri ndetse n'amashami yacu
-            yose.
+            hifashishijwe igukoranabuhanga ryacu kuko muri Congozi Expert
+            ushobora guhitamo kwiga imbonankubone cyagwa ukifashisha uburyo
+            bw'igukoranabuhanga rya Congozi Expert. Mumashuri ndetse n'amashami
+            yacu yose.
           </p>
         </div>
       </div>

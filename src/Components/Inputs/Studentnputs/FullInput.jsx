@@ -11,15 +11,12 @@ const FullInput = ({
 
   return (
     <div className="flex md:flex-row flex-col gap-4 w-full px-4">
-      {/* Label */}
       <label
         htmlFor={inputId}
         className="text-gray-700 font-medium mb-1 md:w-[16%] w-full"
       >
         {label}:
       </label>
-
-      {/* Input Field */}
       <input
         id={inputId}
         name={name}

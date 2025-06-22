@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react";
 import AccountCard from "../../../Components/Cards/AdminCards/AccountCard";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import { FaHandHoldingDollar } from "react-icons/fa6";
-import Irembo from "../../../assets/irembopay.png";
 import Mtn from "../../../assets/MTN.jpg";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
 
 const SchoolUnpaid = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -19,6 +17,9 @@ const SchoolUnpaid = () => {
 
   const [account, setAccount] = useState({ data: [] });
   const [userName, setUserName] = useState("");
+  const [phoneUsed, setPhoneUsed] = useState("");
+  const [ownerName, setOwnerName] = useState("");
+  const [message, setMessage] = useState({ text: "", type: "" });
   // Get user info from localStorage
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -83,26 +84,72 @@ const SchoolUnpaid = () => {
   const closePopup = () => {
     setSelectedAccount(null);
     setPaymentStep("confirmation");
+    setPhoneUsed("");
+    setOwnerName("");
   };
 
-  const handlePayment = async () => {
+  const handleNotify = async () => {
+    if (!phoneUsed || !ownerName) {
+      setMessage({
+        text: "Wongera uzuzise nimero ya telephone n'amazina y'umunyamikoro",
+        type: "error",
+      });
+      setTimeout(() => setMessage({ text: "", type: "" }), 9000);
+      return;
+    }
+
     try {
       const token = localStorage.getItem("token");
+      const purchasedDataId = selectedAccount._id;
+      const paidItem = selectedAccount.itemId;
+      const notificationMessage = `Dear Admin, Turakumenyesha ko ${userName} yishyuye konte yitwa ${paidItem.title} izarangira muminsi ${paidItem.validIn} amafaranga ${paidItem.fees} Rwf akoresheje telephone ${phoneUsed} ibaruye kuri ${ownerName}. Reba ko wayabonye kuri telephone nimero: 0789394424 maze umuhe uburenganzira kuri iyi purchase Id: ${purchasedDataId}. Murakoze!!!!!`;
+      const noteTitle = `${userName} requests for approval`;
+      const response = await axios.post(
+        "https://heroes-backend-wapq.onrender.com/api/v1/notification",
+        {
+          message: notificationMessage,
+          noteTitle: noteTitle,
+          purchasedItem: purchasedDataId,
+          ownerName: userName,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       const purchaseId = selectedAccount._id;
-      const response = await axios.put(
+      await axios.put(
         `https://heroes-backend-wapq.onrender.com/api/v1/purchases/${purchaseId}`,
-        { status: "complete" },
+        { status: "waitingConfirmation" },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+      await axios.delete(
+        `https://heroes-backend-wapq.onrender.com/api/v1/unpaidaccounts/${paidItem._id}`
+      );
+      setMessage({
+        text: response.data.message || "Kwishyura byakunze neza!",
+        type: "success",
+      });
+      setTimeout(() => setMessage({ text: "", type: "" }), 9000);
+
       closePopup();
       fetchData();
     } catch (error) {
-      toast.error("Kwishyura byanze.");
+      setMessage({
+        text: "Kwishyura byanze. Wongera gerageza.",
+        type: "error",
+      });
+      setTimeout(() => setMessage({ text: "", type: "" }), 9000);
       console.error("Payment error:", error);
+      closePopup();
+      fetchData();
     }
   };
 
@@ -114,14 +161,14 @@ const SchoolUnpaid = () => {
       <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
         <input
           type="text"
-          placeholder="---Select account validIn---"
+          placeholder="---Shaka ukoresheje igihe konte izarangirira---"
           value={validIn}
           onChange={(e) => setvalidIn(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer"
         />
         <input
           type="text"
-          placeholder="---Filter account Fees---"
+          placeholder="---Shaka n'igiciro---"
           value={fees}
           onChange={(e) => setFees(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer"
@@ -129,7 +176,7 @@ const SchoolUnpaid = () => {
         <div className="w-full px-3 md:flex justify-center items-center hidden">
           <input
             type="search"
-            placeholder="Search Everything"
+            placeholder="Shaka konte n'igiciro cg iminsi"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -140,13 +187,50 @@ const SchoolUnpaid = () => {
       <div className="w-full px-3 pb-3 flex justify-center items-center md:hidden">
         <input
           type="search"
-          placeholder="Search Everything"
+          placeholder="Shaka konte n'igiciro cg iminsi"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl w-full"
         />
       </div>
-
+      {message.text && (
+        <div
+          className={`flex justify-center z-50 p-4 rounded-md shadow-lg ${
+            message.type === "success"
+              ? "bg-green-100 text-green-800 border border-green-300"
+              : "bg-red-100 text-red-800 border border-red-300"
+          }`}
+        >
+          <div className="flex items-center">
+            {message.type === "success" ? (
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            ) : (
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            )}
+            <span>{message.text}</span>
+          </div>
+        </div>
+      )}
       {/* account Cards */}
       {filteredAccounts.length === 0 ? (
         <p className="text-center py-4 text-red-500">No data found</p>
@@ -166,7 +250,7 @@ const SchoolUnpaid = () => {
                 validIn={account.validIn}
                 onPurchase={() => handlePurchaseClick(accountItem)}
                 icon={<FaHandHoldingDollar />}
-                button={"Proceed Payment"}
+                button={"Soza Kwishyura"}
                 buttonColor={buttonColor}
               />
             );
@@ -225,52 +309,67 @@ const SchoolUnpaid = () => {
                       <input type="radio" name="payment" checked readOnly /> MTN
                       Mobile Money
                     </li>
-                    <li>
-                      <input type="radio" name="payment" /> Airtel Money
-                    </li>
-                    <li>
-                      <input type="radio" name="payment" /> Ikarita ya Banki
-                    </li>
-                    <li>
-                      <input type="radio" name="payment" /> Amafaranga mu ntoki
-                      / Ejenti
-                    </li>
-                    <li>
-                      <input type="radio" name="payment" /> Konti za banki
-                    </li>
-                    <img src={Irembo} alt="" className="w-24" />
                   </ul>
                 </div>
-                <div className="flex flex-col justify-center items-start px-3 py-2">
+                <div className="flex flex-col justify-center px-3 py-2">
                   <p className="text-start">
-                    Kanda ino mibare kuri telefone yawe ya MTN maze <br />
-                    wishyure:
-                  </p>
-                  <p className="flex justify-center gap-2 md:py-6 font-bold">
-                    <img src={Mtn} alt="" className="w-10 h-6" />
-                    *182*3*7*
-                    <span className="bg-green-400/20 border px-1 border-green-600">
-                      880318112865
+                    Kanda ino mibare kuri telefone yawe ukoreshe SIM kadi ya MTN
+                    maze <br />
+                    wishyure kuri:{" "}
+                    <span className="text-md font-semibold text-yellow-700">
+                      Vianney MUNYENWARI
                     </span>
-                    #
                   </p>
-                  <p>Cyangwa ushyiremo nomero yawe ya MTM MoMo Maze wishyure</p>
-                  <div className="w-full">
+                  <p className="flex justify-center md:py-6 py-4 font-bold">
+                    <img src={Mtn} alt="" className="w-10 h-6" />
+                    *182*1*1*
+                    <span className="bg-green-400/20 border border-green-600">
+                      0789394424
+                    </span>
+                    *{selectedAccount.itemId.fees}#
+                  </p>
+                  <p className="text-md text-Total py-4 font-semibold text-cente">
+                    Tanga amakuru kunyemezavbwishyu yawe
+                  </p>
+                  <div className="w-full text-start">
+                    <label htmlFor="phone">Nimero wakoresheje wishyura</label>
                     <input
                       type="text"
-                      placeholder="ex: 0789xxxxxxx"
+                      placeholder="Urugero: 0786731449"
                       className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
+                      value={phoneUsed}
+                      onChange={(e) => setPhoneUsed(e.target.value)}
+                      required
+                    />
+                    <label htmlFor="phone">Amazina ibaruyeho</label>
+                    <input
+                      type="text"
+                      placeholder="Urugero: Vianney MUNYENWARI"
+                      className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
+                      value={ownerName}
+                      onChange={(e) => setOwnerName(e.target.value)}
+                      required
                     />
                     <button
                       className="bg-green-500 text-white px-2 py-1 rounded mt-4 w-full"
-                      onClick={handlePayment}
+                      onClick={handleNotify}
                     >
-                      Ishyura {selectedAccount.fees} RWF
+                      Menyesha Ko Wishyuye
                     </button>
                     <p className="text-start py-2 font-medium">
-                      Nyuma yo kwemeza kwishyura unyuze kuri Ishyura{" "}
-                      {selectedAccount.fees}, Urahabwa SMS <br />
-                      kuri telefone yawe wemeze maze ushyiremo umubare w'ibanga.
+                      Nyuma yo kumenyekanisha ko wishyuye{" "}
+                      <span className="text-Total text-md font-semibold">
+                        muminota 5
+                      </span>{" "}
+                      urahabwa ubutumwa{" "}
+                      <span className="text-Total text-md font-semibold">
+                        kuri sisiteme hejuru
+                      </span>{" "}
+                      bukwemerera{" "}
+                      <span className="text-Total text-md font-semibold">
+                        gukora
+                      </span>{" "}
+                      ibizamini biri muri {selectedAccount.itemId.title}
                     </p>
                   </div>
                 </div>
@@ -279,7 +378,6 @@ const SchoolUnpaid = () => {
           </div>
         </div>
       )}
-      <ToastContainer />
     </div>
   );
 };

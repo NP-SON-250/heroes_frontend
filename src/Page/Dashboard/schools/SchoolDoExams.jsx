@@ -14,7 +14,6 @@ const SchoolDoExams = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [validIn, setValidIn] = useState("");
   const [fees, setFees] = useState("");
-  //   const [isaccountStarted, setIsaccountStarted] = useState(false);
 
   const location = useLocation();
   const { accessCode } = queryString.parse(location.search);
@@ -70,12 +69,12 @@ const SchoolDoExams = () => {
     (currentPage + 1) * accountsPerPage
   );
 
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
 
   const handleViewExams = (account) => {
     if (account.accessCode) {
       const accessCode = account.accessCode;
-      navigate(`/schools/accessableexams?accessCode=${accessCode}`);
+      navkwigate(`/schools/accessableexams?accessCode=${accessCode}`);
     } else {
       console.error("Nta code yo kukwereka ibizamini ufite.");
     }
@@ -85,17 +84,17 @@ const SchoolDoExams = () => {
     <div>
       <div className="flex flex-col justify-around items-center md:px-5 gap-1 bg-white md:p-2">
         <WelcomeDear />
-        <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
+        <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-12 gap-1 px-3 py-4">
           <input
             type="text"
-            placeholder="---Select account validIn---"
+            placeholder="---Shaka konte n'iminsi imara ---"
             value={validIn}
             onChange={(e) => setValidIn(e.target.value)}
             className="border-2 border-blue-500 p-2 rounded-xl"
           />
           <input
             type="text"
-            placeholder="---Filter account Fees---"
+            placeholder="---Shaka konte n'igiciro---"
             value={fees}
             onChange={(e) => setFees(e.target.value)}
             className="border-2 border-blue-500 p-2 rounded-xl"
@@ -103,7 +102,7 @@ const SchoolDoExams = () => {
           <div className="w-full px-3 md:flex hidden">
             <input
               type="search"
-              placeholder="Search Everything"
+              placeholder="Shaka konte n'igiciro cg iminsi"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -114,7 +113,7 @@ const SchoolDoExams = () => {
         <div className="w-full px-3 pb-3 flex md:hidden">
           <input
             type="search"
-            placeholder="Search Everything"
+            placeholder="Shaka konte n'igiciro cg iminsi"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -131,14 +130,14 @@ const SchoolDoExams = () => {
               return (
                 <AccountCard
                   key={index}
-                  title={`Account ${
-                    currentPage * accountsPerPage + index + 1
-                  }: ${account.itemId.title}`}
+                  title={`Konte ${currentPage * accountsPerPage + index + 1}: ${
+                    account.itemId.title
+                  }`}
                   fees={account.itemId.fees}
                   validIn={account.itemId.validIn}
                   onPurchase={() => handleViewExams(account)}
                   icon={<FaRegEye />}
-                  button={"View Exams"}
+                  button={"Reba Ibizamini"}
                   buttonColor={buttonColor}
                 />
               );
@@ -147,7 +146,7 @@ const SchoolDoExams = () => {
         )}
 
         {totalPages > 1 && (
-          <div className="flex justify-around md:gap-[830px] gap-[120px] md:pb-0 pt-3 px-10">
+          <div className="flex justify-around md:gap-[700px] gap-[120px] md:pb-0 pt-3 px-10">
             <div>
               <button
                 className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${

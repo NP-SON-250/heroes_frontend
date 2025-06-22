@@ -126,6 +126,7 @@ const EditUserPopup = ({
                   <option value="student">student</option>
                   <option value="admin">admin</option>
                   <option value="school">school</option>
+                  <option value="supperAdmin">supperAdmin</option>
                 </select>
               </div>
             </div>

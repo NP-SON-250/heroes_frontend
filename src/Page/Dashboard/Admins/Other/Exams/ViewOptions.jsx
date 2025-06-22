@@ -135,8 +135,6 @@ const ViewOptions = ({ question, onBack }) => {
           </tbody>
         </table>
       </div>
-
-      {/* Popups */}
       {optionToEdit && (
         <EditOptionPopup
           option={optionToEdit}

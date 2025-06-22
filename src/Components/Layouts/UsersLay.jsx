@@ -8,12 +8,12 @@ const UsersLay = ({ role }) => {
   const location = useLocation();
 
   const sectionMap = {
-    "/students/home": "Studend Dashboard",
-    "/students/market": "Examination Market",
-    "/students/online": "Do Exams Online",
-    "/students/exams": "My Examinations",
-    "/students/profile": "My Account",
-    "/students/school": "School Account",
+    "/students/home": "ibigenewe Umunyeshuri",
+    "/students/market": "Isoko ry'ibizamini",
+    "/students/online": "Aho Bakorera Ikizamini",
+    "/students/exams": "Ibizamini Byanjye",
+    "/students/profile": "Umwirondoro Wanjye",
+    "/students/school": "Aho Bagurira konti y'ishuri",
 
     "/admins/home": "Admin Dashboard",
     "/admins/exams": "Exams",
@@ -22,35 +22,30 @@ const UsersLay = ({ role }) => {
     "/admins/profile": "My Account",
     "/admins/payments": "Payments",
 
-    "/schools/home": "School Dashboard",
-    "/schools/account/market": "Account Market",
-    "/schools/online": "Do Exams Online",
-    "/schools/exams": "My Examinations",
-    "/schools/account": "My Account",
+    "/schools/home": "Konte y'Ikigo",
+    "/schools/account/market": "Isoko rya Konte",
+    "/schools/online": "gukora Ibizamini",
+    "/schools/accounts": "Konte Nishyuye",
+    "/schools/account": "Umwirondoro wa Konte",
   };
-
-  const [applyHeight, setApplyHeight] = useState(false);
-
-  // Get current year for footer
   const getCurrentYear = () => new Date().getFullYear();
-  const currentSection = sectionMap[location.pathname] || "Dashboard";
+  const currentSection =
+    sectionMap[location.pathname] || "ibigenewe Umunyeshuri";
 
   return (
     <>
       <div className="flex">
         <Sidebar role={role} />
         <div className="flex flex-col">
-          {/* Pass userRole to TopBar */}
           <Topbar currentSection={currentSection} role={role} />
         </div>
       </div>
       <div className="pt-20 lg:pl-[300px] md:pb-[60px] pb-[14vh]">
         <Outlet />
-        {/* Footer */}
         <div className="md:fixed md:bottom-0 md:left-0 md:right-0 md:block hidden w-full">
-          <div className="flex justify-center bg-Unpaid">
-            <p className="md:p-[6px] p-5 text-blue-900 md:text-2xl text-xs font-bold text-center uppercase">
-              &copy; {getCurrentYear()} Heroes Technology{" "}
+          <div className="flex justify-center items-center h-[7.5vh] bg-Unpaid">
+            <p className="md:p-[6px] p-5 text-blue-900 md:text-xs text-xs font-bold text-center uppercase">
+              &copy; {getCurrentYear()} Congozi Expert Technical Unity{" "}
               <span className="normal-case">Limited</span>
             </p>
           </div>

@@ -1,10 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 
-const ExamTimer = ({ accessCode, duration = 3600, onTimeout }) => {
+const ExamTimer = ({ accessCode, duration = 2400, onTimeout }) => {
   const [timeLeft, setTimeLeft] = useState(duration);
   const intervalRef = useRef(null);
-
-  // Function to calculate remaining time
   const getRemainingTime = () => {
     const startTime = parseInt(
       localStorage.getItem(`exam_${accessCode}_start`),
@@ -22,8 +20,6 @@ const ExamTimer = ({ accessCode, duration = 3600, onTimeout }) => {
 
     return remaining > 0 ? remaining : 0;
   };
-
-  // Start timer if not already started
   const startTimerIfNotStarted = () => {
     const existingStart = localStorage.getItem(`exam_${accessCode}_start`);
     if (!existingStart) {
@@ -42,7 +38,6 @@ const ExamTimer = ({ accessCode, duration = 3600, onTimeout }) => {
 
       if (remaining <= 0) {
         clearInterval(intervalRef.current);
-        // Clean up storage
         localStorage.removeItem(`exam_${accessCode}_start`);
         localStorage.removeItem(`exam_${accessCode}_duration`);
         if (onTimeout) onTimeout();
@@ -51,8 +46,6 @@ const ExamTimer = ({ accessCode, duration = 3600, onTimeout }) => {
 
     return () => clearInterval(intervalRef.current);
   }, [accessCode]);
-
-  // Format time as mm:ss
   const formatTime = (secs) => {
     const m = Math.floor(secs / 60);
     const s = secs % 60;

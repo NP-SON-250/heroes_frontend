@@ -23,7 +23,7 @@ const ViewQuestions = ({ exam, onBack }) => {
   const [questionToAddOption, setQuestionToAddOption] = useState(null);
   const [questionToDelete, setQuestionToDelete] = useState(null);
 
-  const [questions, setQuestions] = useState([]); // Corrected: from null to []
+  const [questions, setQuestions] = useState([]);
 
   const toggleMenu = (index) => {
     setSelectedMenu(selectedMenu === index ? null : index);
@@ -221,8 +221,6 @@ const ViewQuestions = ({ exam, onBack }) => {
               </tbody>
             </table>
           </div>
-
-          {/* Pagination */}
           <div className="flex justify-center items-center mt-6 space-x-4">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
@@ -254,8 +252,6 @@ const ViewQuestions = ({ exam, onBack }) => {
           </div>
         </>
       )}
-
-      {/* Popups */}
       {showEditPopup && (
         <EditQuestionPopup
           questionToEdit={questionToEdit}

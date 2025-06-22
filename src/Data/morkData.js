@@ -7,13 +7,11 @@ import Image6 from "../assets/trafic4.jpg";
 import Image7 from "../assets/trafic1.jpg";
 import Image8 from "../assets/trafic3.jpg";
 
-//Exams data
-
 export const examData = [
   {
     id: "EXAM001",
-    title: "Driving Theory Test",
-    type: "Learn",
+    title: "Driving Theory gukora",
+    type: "kwiga",
     fees: 9000,
     number: "001",
     duration: 300,
@@ -247,8 +245,8 @@ export const examData = [
   },
   {
     id: "EXAM002",
-    title: "Driving Theory Test",
-    type: "Test",
+    title: "Driving Theory gukora",
+    type: "gukora",
     fees: 20000,
     duration: 300,
     number: "001",
@@ -500,8 +498,8 @@ export const examData = [
   },
   {
     id: "EXAM003",
-    title: "Driving Theory Test",
-    type: "Test",
+    title: "Driving Theory gukora",
+    type: "gukora",
     fees: 10000,
     number: "002",
     duration: 300,
@@ -753,8 +751,8 @@ export const examData = [
   },
   {
     id: "EXAM004",
-    title: "Driving Theory Test",
-    type: "Learn",
+    title: "Driving Theory gukora",
+    type: "kwiga",
     fees: 1000,
     number: "002",
     duration: 300,
@@ -1006,8 +1004,8 @@ export const examData = [
   },
   {
     id: "EXAM005",
-    title: "Driving Theory Test",
-    type: "Learn",
+    title: "Driving Theory gukora",
+    type: "kwiga",
     fees: 7000,
     number: ["003"],
     duration: 300,
@@ -1259,8 +1257,8 @@ export const examData = [
   },
   {
     id: "EXAM006",
-    title: "Driving Theory Test",
-    type: "Test",
+    title: "Driving Theory gukora",
+    type: "gukora",
     fees: 15000,
     number: ["003"],
     duration: 300,
@@ -1512,8 +1510,8 @@ export const examData = [
   },
   {
     id: "EXAM007",
-    title: "Driving Theory Test",
-    type: "Test",
+    title: "Driving Theory gukora",
+    type: "gukora",
     fees: 15000,
     number: ["004"],
     duration: 300,
@@ -1765,8 +1763,8 @@ export const examData = [
   },
   {
     id: "EXAM008",
-    title: "Driving Theory Test",
-    type: "Learn",
+    title: "Driving Theory gukora",
+    type: "kwiga",
     fees: 5000,
     number: ["004"],
     duration: 300,
@@ -2027,8 +2025,8 @@ export const accountData = [
     exams: [
       {
         id: "EXAM001",
-        title: "Driving Theory Test",
-        type: "Learn",
+        title: "Driving Theory gukora",
+        type: "kwiga",
         fees: 9000,
         number: "001",
         questions: [
@@ -2056,8 +2054,8 @@ export const accountData = [
     exams: [
       {
         id: "EXAM002",
-        title: "Driving Theory Test",
-        type: "Test",
+        title: "Driving Theory gukora",
+        type: "gukora",
         fees: 10000,
         number: "003",
         questions: [
@@ -2085,8 +2083,8 @@ export const accountData = [
     exams: [
       {
         id: "EXAM002",
-        title: "Driving Theory Test",
-        type: "Test",
+        title: "Driving Theory gukora",
+        type: "gukora",
         fees: 90000,
         number: "003",
         questions: [
@@ -2114,8 +2112,8 @@ export const accountData = [
     exams: [
       {
         id: "EXAM002",
-        title: "Driving Theory Test",
-        type: "Test",
+        title: "Driving Theory gukora",
+        type: "gukora",
         fees: 10000,
         number: "003",
         questions: [
@@ -2143,8 +2141,8 @@ export const accountData = [
     exams: [
       {
         id: "EXAM002",
-        title: "Driving Theory Test",
-        type: "Test",
+        title: "Driving Theory gukora",
+        type: "gukora",
         fees: 10000,
         number: "003",
         questions: [
@@ -2172,8 +2170,8 @@ export const accountData = [
     exams: [
       {
         id: "EXAM002",
-        title: "Driving Theory Test",
-        type: "Test",
+        title: "Driving Theory gukora",
+        type: "gukora",
         fees: 90000,
         number: "003",
         questions: [
@@ -2201,8 +2199,8 @@ export const accountData = [
     exams: [
       {
         id: "EXAM002",
-        title: "Driving Theory Test",
-        type: "Test",
+        title: "Driving Theory gukora",
+        type: "gukora",
         fees: 10000,
         number: "003",
         questions: [
@@ -2223,8 +2221,6 @@ export const accountData = [
     ],
   },
 ];
-
-//Navbar
 
 export const navContents = [
   {

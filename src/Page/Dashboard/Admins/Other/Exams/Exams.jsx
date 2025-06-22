@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { MdMoreHoriz } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import AddQuestionPopup from "./AddQuestionPopup";
 import EditExamPopup from "./EditExamPopup";
-import axios from "axios";
+import ViewQuestions from "./ViewQuestions";
 
 const EXAMS_PER_PAGE = 4;
 
-const Exams = () => {
+const AdminExams = () => {
   const [exams, setExams] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentUser, setCurrentUser] = useState(null);
+  const navkwigate = useNavigate();
+
   const [editingExam, setEditingExam] = useState(null);
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [addQuestion, setAddQuestion] = useState(false);
@@ -18,67 +23,166 @@ const Exams = () => {
   const [editedType, setEditedType] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [examToDelete, setExamToDelete] = useState(null);
+  const [viewingExam, setViewingExam] = useState(null);
+  const [selectedExam, setSelectedExam] = useState(null);
+
+  const isAdmin = currentUser?.role === "admin";
+  const isSuperAdmin = currentUser?.role === "supperAdmin";
+  const canAdd = isAdmin || isSuperAdmin;
+  const canEdit = isAdmin || isSuperAdmin;
+  const canDelete = isSuperAdmin;
 
   useEffect(() => {
-    // Fetch exams from API
-    const fetchExams = async () => {
+    const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user");
+
+    if (!token) {
+      navkwigate("/kwinjira");
+      return;
+    }
+
+    if (userData) {
       try {
-        const res = await axios.get(
-          "https://heroes-backend-wapq.onrender.com/api/v1/exams"
-        );
-        if (res.data) {
-          setExams(res.data.data);
-        }
+        setCurrentUser(JSON.parse(userData));
       } catch (error) {
-        console.error("Failed to fetch exams:", error);
+        console.error("Failed to parse user data:", error);
       }
-    };
+    }
 
     fetchExams();
-  }, []);
+  }, [navkwigate]);
+
+  const fetchExams = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navkwigate("/kwinjira");
+        return;
+      }
+
+      const res = await axios.get(
+        "https://heroes-backend-wapq.onrender.com/api/v1/exams",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setExams(res.data.data || []);
+    } catch (error) {
+      console.error("Failed to fetch exams:", error);
+      if (error.response?.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        navkwigate("/kwinjira");
+      }
+    }
+  };
+
+  const handleAddQuestionClick = (exam) => {
+    const token = localStorage.getItem("token");
+    if (!token || !canAdd) {
+      navkwigate("/kwinjira");
+      return;
+    }
+
+    setSelectedExam(exam);
+    setAddQuestion(true);
+    setSelectedMenu(null);
+  };
 
   const toggleMenu = (examId) => {
     setSelectedMenu(selectedMenu === examId ? null : examId);
   };
 
   const handleEditClick = (exam) => {
+    const token = localStorage.getItem("token");
+    if (!token || !canEdit) {
+      navkwigate("/kwinjira");
+      return;
+    }
+
     setEditingExam(exam);
+    setEditedTitle(exam.title);
+    setEditedFees(exam.fees);
+    setEditedType(exam.type);
     setShowEditPopup(true);
     setSelectedMenu(null);
   };
 
-  const handleAddQuestionClick = () => {
-    setAddQuestion(true);
-    setSelectedMenu(null);
-  };
-
   const handleDeleteExam = async () => {
-    if (!examToDelete) return;
+    const token = localStorage.getItem("token");
+    if (!token || !canDelete || !examToDelete) {
+      navkwigate("/kwinjira");
+      return;
+    }
 
     try {
-      const res = await axios.delete(
-        `https://heroes-backend-wapq.onrender.com/api/v1/exams/${examToDelete._id}`
+      await axios.delete(
+        `https://heroes-backend-wapq.onrender.com/api/v1/exams/${examToDelete._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-      if (res.data) {
-        const updatedExams = exams.filter((e) => e._id !== examToDelete._id);
-        setExams(updatedExams);
-        setExamToDelete(null);
-        setShowDeleteConfirm(false);
-      } else {
-        console.error("Failed to delete exam:", res.data.message);
-      }
+      setExams(exams.filter((e) => e._id !== examToDelete._id));
+      setExamToDelete(null);
+      setShowDeleteConfirm(false);
     } catch (error) {
       console.error("Error deleting exam:", error);
+      if (error.response?.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        navkwigate("/kwinjira");
+      }
     }
   };
 
-  useEffect(() => {
-    if (editingExam) {
-      setEditedTitle(editingExam.title);
-      setEditedFees(editingExam.fees);
+  const handleSaveEdit = async () => {
+    const token = localStorage.getItem("token");
+    if (!token || !canEdit || !editingExam) {
+      navkwigate("/kwinjira");
+      return;
     }
-  }, [editingExam]);
 
+    try {
+      const res = await axios.put(
+        `https://heroes-backend-wapq.onrender.com/api/v1/exams/${editingExam._id}`,
+        {
+          title: editedTitle,
+          fees: editedFees,
+          type: editedType,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setExams(
+        exams.map((exam) =>
+          exam._id === editingExam._id
+            ? {
+                ...exam,
+                title: editedTitle,
+                fees: editedFees,
+                type: editedType,
+              }
+            : exam
+        )
+      );
+      setShowEditPopup(false);
+      setEditingExam(null);
+    } catch (error) {
+      console.error("Error updating exam:", error);
+      if (error.response?.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        navkwigate("/kwinjira");
+      }
+    }
+  };
   const indexOfLastExam = currentPage * EXAMS_PER_PAGE;
   const indexOfFirstExam = indexOfLastExam - EXAMS_PER_PAGE;
   const currentExams = exams.slice(indexOfFirstExam, indexOfLastExam);
@@ -89,46 +193,14 @@ const Exams = () => {
     setSelectedMenu(null);
   };
 
-  const handleSaveEdit = async () => {
-    if (!editingExam) return;
+  if (!currentUser) return <div>Loading...</div>;
 
-    try {
-      const res = await axios.put(
-        `https://heroes-backend-wapq.onrender.com/api/v1/exams/${editingExam._id}`,
-        {
-          title: editedTitle,
-          fees: editedFees,
-          type: editedType,
-        }
-      );
-
-      if (res.data) {
-        // Update exams locally after successful update
-        const updatedExams = exams.map((exam) =>
-          exam._id === editingExam._id
-            ? {
-                ...exam,
-                title: editedTitle,
-                fees: editedFees,
-                type: editedType,
-              }
-            : exam
-        );
-        setExams(updatedExams);
-        setShowEditPopup(false);
-        setEditingExam(null);
-      } else {
-        console.error("Failed to update exam:", res.data.message);
-      }
-    } catch (error) {
-      console.error("Error updating exam:", error);
-    }
-  };
-
-  return (
+  return viewingExam ? (
+    <ViewQuestions exam={viewingExam} onBack={() => setViewingExam(null)} />
+  ) : (
     <div className="md:px-6 py-6 px-1">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold">Exams</h2>
+        <h2 className="font-semibold">Manage All Exams</h2>
       </div>
 
       <div className="overflow-x-auto rounded-lg shadow border border-blue-900">
@@ -141,9 +213,11 @@ const Exams = () => {
               <th className="px-6 py-1 whitespace-nowrap">Fees</th>
               <th className="px-6 py-1 whitespace-nowrap">Type</th>
               <th className="px-6 py-1 whitespace-nowrap">Questions</th>
-              <th className="px-6 py-1 text-right whitespace-nowrap">
-                Actions
-              </th>
+              {(canEdit || canDelete || canAdd) && (
+                <th className="px-6 py-1 text-right whitespace-nowrap">
+                  Actions
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -159,59 +233,71 @@ const Exams = () => {
                 <td className="px-6 py-1 whitespace-nowrap">
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      exam.questions.length >= 20
+                      exam.questions?.length >= 20
                         ? "bg-green-100 text-green-700"
                         : "bg-red-100 text-red-600"
                     }`}
                   >
-                    {exam.questions.length}
+                    {exam.questions?.length}
                   </span>
                 </td>
-                <td className="px-6 py-1 text-right relative">
-                  <button
-                    onClick={() => toggleMenu(exam._id)}
-                    className="p-2 hover:bg-gray-200 rounded-full"
-                  >
-                    <MdMoreHoriz size={22} />
-                  </button>
-                  {selectedMenu === exam._id && (
-                    <div className="absolute right-6 mt-2 w-52 bg-white border border-gray-300 rounded-md shadow-lg z-10">
-                      <ul className="text-sm text-blue-900">
-                        <li
-                          onClick={() => handleEditClick(exam)}
-                          className="hover:bg-gray-100 px-4 py-1 cursor-pointer"
-                        >
-                          Edit
-                        </li>
-                        <li
-                          onClick={() => {
-                            setExamToDelete(exam);
-                            setShowDeleteConfirm(true);
-                            setSelectedMenu(null);
-                          }}
-                          className="hover:bg-gray-100 text-red-500 px-4 py-1 cursor-pointer"
-                        >
-                          Delete
-                        </li>
-                        {exam.questions.length < 20 && (
-                          <li
-                            onClick={handleAddQuestionClick}
-                            className="hover:bg-gray-100 px-4 py-1 cursor-pointer"
-                          >
-                            Add {20 - exam.questions.length} Questions
-                          </li>
-                        )}
-                      </ul>
-                    </div>
-                  )}
-                </td>
+                {(canEdit || canDelete || canAdd) && (
+                  <td className="px-6 py-1 text-right relative">
+                    <button
+                      onClick={() => toggleMenu(exam._id)}
+                      className="p-2 hover:bg-gray-200 rounded-full"
+                    >
+                      <MdMoreHoriz size={22} />
+                    </button>
+                    {selectedMenu === exam._id && (
+                      <div className="absolute right-6 mt-2 w-52 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                        <ul className="text-sm text-blue-900">
+                          {canEdit && (
+                            <li
+                              onClick={() => handleEditClick(exam)}
+                              className="hover:bg-gray-100 px-4 py-1 cursor-pointer"
+                            >
+                              Edit
+                            </li>
+                          )}
+                          {canDelete && (
+                            <li
+                              onClick={() => {
+                                setExamToDelete(exam);
+                                setShowDeleteConfirm(true);
+                                setSelectedMenu(null);
+                              }}
+                              className="hover:bg-gray-100 text-red-500 px-4 py-1 cursor-pointer"
+                            >
+                              Delete
+                            </li>
+                          )}
+                          {canAdd && exam.questions.length < 20 && (
+                            <li
+                              onClick={() => handleAddQuestionClick(exam)}
+                              className="hover:bg-gray-100 px-4 py-1 cursor-pointer"
+                            >
+                              Add {20 - exam.questions.length} Questions
+                            </li>
+                          )}
+                          {exam.questions.length > 0 && (
+                            <li
+                              onClick={() => setViewingExam(exam)}
+                              className="hover:bg-gray-100 px-4 py-1 cursor-pointer pb-2"
+                            >
+                              View {exam.questions.length} Questions
+                            </li>
+                          )}
+                        </ul>
+                      </div>
+                    )}
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-
-      {/* Pagination */}
       <div className="flex justify-center items-center mt-6 space-x-4">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
@@ -241,8 +327,6 @@ const Exams = () => {
           Next
         </button>
       </div>
-
-      {/* Edit Exam Popup */}
       {showEditPopup && (
         <EditExamPopup
           editingExam={editingExam}
@@ -256,14 +340,13 @@ const Exams = () => {
           handleSaveEdit={handleSaveEdit}
         />
       )}
-
-      {/* Add Questions Popup */}
-      <AddQuestionPopup
-        addQuestion={addQuestion}
-        setAddQuestion={setAddQuestion}
-      />
-
-      {/* Delete Confirmation Modal */}
+      {addQuestion && (
+        <AddQuestionPopup
+          setAddQuestion={setAddQuestion}
+          selectedExam={selectedExam}
+          refreshQuestions={fetchExams}
+        />
+      )}
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-[999] bg-black bg-opacity-40 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
@@ -271,7 +354,7 @@ const Exams = () => {
               Are you sure you want to delete this exam?
             </h2>
             <p className="text-gray-500 mb-6">This action cannot be undone.</p>
-            <div className="flex justify-center gap-6">
+            <div className="flex justify-around gap-6">
               <button
                 onClick={handleDeleteExam}
                 className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
@@ -295,4 +378,4 @@ const Exams = () => {
   );
 };
 
-export default Exams;
+export default AdminExams;

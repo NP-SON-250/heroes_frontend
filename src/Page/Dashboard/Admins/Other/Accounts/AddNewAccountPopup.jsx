@@ -1,13 +1,15 @@
 import axios from "axios";
 import React, { useState } from "react";
-
+import LoadingSpinner from "../../../../../Components/LoadingSpinner ";
 const AddNewAccountPopup = ({ setShowAddAccountPopup, onAccountAdded }) => {
   const [accountTitle, setAccountTitle] = useState("");
   const [accountFees, setAccountFees] = useState("");
   const [accountValidIn, setAccountValidIn] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSave = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.post(
         "https://heroes-backend-wapq.onrender.com/api/v1/accounts",
         {
@@ -20,6 +22,8 @@ const AddNewAccountPopup = ({ setShowAddAccountPopup, onAccountAdded }) => {
       setShowAddAccountPopup(false);
     } catch (error) {
       console.error("Failed to create account:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -85,7 +89,13 @@ const AddNewAccountPopup = ({ setShowAddAccountPopup, onAccountAdded }) => {
             onClick={handleSave}
             className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
-            Save
+            {isLoading ? (
+              <>
+                <LoadingSpinner size={5} strokeWidth={2} />
+              </>
+            ) : (
+              "Save Account"
+            )}
           </button>
         </div>
       </div>

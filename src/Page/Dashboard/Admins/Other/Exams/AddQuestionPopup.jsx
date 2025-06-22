@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { GoPaperclip } from "react-icons/go";
-import axios from "axios"; // <-- import axios here
+import axios from "axios";
 
 const AddQuestionPopup = ({
   setAddQuestion,
@@ -8,13 +8,14 @@ const AddQuestionPopup = ({
   refreshQuestions,
 }) => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     phrase: "",
     marks: "",
     image: null,
   });
 
-  if (!selectedExam) return null; // prevent crash if exam is missing
+  if (!selectedExam) return null;
 
   const handleFileTrigger = () => {
     document.getElementById("file-upload").click();
@@ -37,6 +38,7 @@ const AddQuestionPopup = ({
 
   const handleSave = async () => {
     try {
+      setIsLoading(true);
       const data = new FormData();
       data.append("phrase", formData.phrase);
       data.append("marks", formData.marks);
@@ -53,8 +55,6 @@ const AddQuestionPopup = ({
           },
         }
       );
-
-      // Refresh and close
       if (typeof refreshQuestions === "function") {
         await refreshQuestions();
       }
@@ -62,6 +62,8 @@ const AddQuestionPopup = ({
     } catch (error) {
       console.error("Error adding question:", error);
       alert("Failed to add question. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -133,7 +135,7 @@ const AddQuestionPopup = ({
             onClick={handleSave}
             className="ml-2 px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
-            Save
+            Save Question
           </button>
         </div>
       </div>

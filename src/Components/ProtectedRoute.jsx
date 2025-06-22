@@ -1,14 +1,11 @@
-// Components/ProtectedRoute.jsx
 import { Navigate, Outlet } from "react-router-dom";
 import { useUserContext } from "./useUserContext";
 
 const ProtectedRoute = ({ allowedRole }) => {
-    const { userRole, loading } = useUserContext();
-
-    // Wait until loading finishes
-    if (loading) {
-      return <div>Loading...</div>; 
-    }
+  const { userRole, loading } = useUserContext();
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   if (!userRole) {
     return <Navigate to="/kwinjira" />;
   }

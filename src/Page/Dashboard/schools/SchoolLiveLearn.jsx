@@ -14,7 +14,7 @@ const SchoolLiveLearn = () => {
   const [viewedQuestions, setViewedQuestions] = useState([]);
 
   const location = useLocation();
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -71,7 +71,7 @@ const SchoolLiveLearn = () => {
   const currentQuestion = examQuestions[selectedQuestion];
 
   const handleTimeout = () => {
-    navigate("/schools/accessableexams");
+    navkwigate("/schools/accessableexams");
   };
   return (
     <div className="flex flex-col bg-white md:p-2 gap-2">
@@ -96,14 +96,14 @@ const SchoolLiveLearn = () => {
               timeLeft={
                 <ExamTimer
                   accessCode={examId}
-                  duration={3600}
+                  duration={2400}
                   onTimeout={handleTimeout}
                 />
               }
               access={examId}
             />
 
-            <div className="flex flex-wrap justify-start py-1 md:gap-4 gap-2">
+            <div className="flex flex-wrap justify-center py-1 md:gap-4 gap-2">
               {examQuestions.map((q, idx) => {
                 return (
                   <button

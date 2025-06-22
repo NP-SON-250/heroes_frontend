@@ -16,7 +16,6 @@ const SchoolDemo = () => {
 
   const [account, setAccount] = useState({ data: [] });
 
-  // Fetch all accounts
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -80,18 +79,17 @@ const SchoolDemo = () => {
     <div className="flex flex-col justify-center items-center md:px-5 gap-1 bg-white md:p-2 ">
       <WelcomeDear />
 
-      {/* Filters */}
-      <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
+      <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-12 gap-1 px-3 py-4">
         <input
           type="text"
-          placeholder="---Select account valid time---"
+          placeholder="---iminsi---"
           value={valid}
           onChange={(e) => setValid(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer text-bold"
         />
         <input
           type="text"
-          placeholder="---Filter account Fees---"
+          placeholder="---igiciro---"
           value={fees}
           onChange={(e) => setFees(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer"
@@ -99,7 +97,7 @@ const SchoolDemo = () => {
         <div className="w-full px-3 md:flex justify-center items-center hidden md:bloc">
           <input
             type="search"
-            placeholder="Search Everything"
+            placeholder="---Ubwoko, igiciro, nimero byikizami---"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -110,14 +108,13 @@ const SchoolDemo = () => {
       <div className="w-full px-3 pb-3 flex justify-center items-center md:hidden">
         <input
           type="search"
-          placeholder="Search Everything"
+          placeholder="---iminsi, igiciro, umutwe byikizami---"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl w-full"
         />
       </div>
 
-      {/* account Cards */}
       {filteredAccounts.length === 0 ? (
         <p className=" py-4 text-red-500">Not data found</p>
       ) : (
@@ -131,7 +128,7 @@ const SchoolDemo = () => {
                 {...account}
                 onPurchase={() => handlePurchaseClick(account)}
                 icon={<BsCart />}
-                button={"Purchase"}
+                button={"Gura Konte"}
                 buttonColor={buttonColor}
               />
             );
@@ -139,9 +136,8 @@ const SchoolDemo = () => {
         </div>
       )}
 
-      {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-around md:gap-[830px] gap-[110px] md:pb-0 pt-3 px-10 ">
+        <div className="flex justify-around md:gap-[700px] gap-[110px] md:pb-0 pt-3 px-10 ">
           <button
             className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
               currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""
@@ -163,12 +159,11 @@ const SchoolDemo = () => {
             }
             disabled={currentPage === totalPages - 1}
           >
-            Izikurira <FaArrowAltCircleRight size={24} />
+            Izikurikira <FaArrowAltCircleRight size={24} />
           </button>
         </div>
       )}
 
-      {/* Payment Popup */}
       {selectedAccount && <CompanyPopup onClose={closePopup} />}
     </div>
   );

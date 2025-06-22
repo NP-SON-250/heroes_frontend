@@ -16,17 +16,12 @@ const EditQuestionPopup = ({
   const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
-    // Load existing image if available
     if (questionToEdit?.image && !editedImage) {
       setImagePreview(questionToEdit.image);
     }
-
-    // If editedImage is a File, generate a preview
     if (editedImage instanceof File) {
       const previewURL = URL.createObjectURL(editedImage);
       setImagePreview(previewURL);
-
-      // Clean up the object URL when component unmounts or image changes
       return () => URL.revokeObjectURL(previewURL);
     }
   }, [editedImage, questionToEdit]);

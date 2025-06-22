@@ -20,7 +20,6 @@ const StudentWaiting = () => {
   const { accessCode } = queryString.parse(location.search);
   const [exam, setExam] = useState({ data: [] });
 
-  // Fetch paid exams
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -74,15 +73,20 @@ const StudentWaiting = () => {
     (currentPage + 1) * examsPerPage
   );
 
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
 
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.has("accessCode")) {
+      navkwigate(location.pathname, { replace: true });
+    }
+  }, []);
   const handleDoExam = (exam) => {
     if (exam.accessCode) {
-      const accessCode = exam.accessCode;
-      navigate(`/students/waitingexams?accessCode=${accessCode}`);
+      navkwigate(`/students/waitingexams?accessCode=${exam.accessCode}`, {
+        replace: true,
+      });
       setIsExamStarted(true);
-    } else {
-      console.error("Nta code yo gukora ikikizamini ufite.");
     }
   };
 
@@ -93,17 +97,17 @@ const StudentWaiting = () => {
       ) : (
         <div className="flex flex-col justify-around items-center md:px-5 gap-1 bg-white md:p-2">
           <WelcomeDear />
-          <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
+          <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-12 gap-1 px-3 py-4">
             <input
               type="text"
-              placeholder="---Select Exam Type---"
+              placeholder="--ubwoko bw'ikizami--"
               value={type}
               onChange={(e) => setType(e.target.value)}
               className="border-2 border-blue-500 p-2 rounded-xl"
             />
             <input
               type="text"
-              placeholder="---Filter Exam Fees---"
+              placeholder="---Shaka n'igiciro---"
               value={fees}
               onChange={(e) => setFees(e.target.value)}
               className="border-2 border-blue-500 p-2 rounded-xl"
@@ -111,7 +115,7 @@ const StudentWaiting = () => {
             <div className="w-full px-3 md:flex hidden">
               <input
                 type="search"
-                placeholder="Search Everything"
+                placeholder="---Ubwoko, igiciro, nimero byikizami---"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -122,7 +126,7 @@ const StudentWaiting = () => {
           <div className="w-full px-3 pb-3 flex md:hidden">
             <input
               type="search"
-              placeholder="Search Everything"
+              placeholder="---Ubwoko, igiciro, nimero byikizami---"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -130,15 +134,17 @@ const StudentWaiting = () => {
           </div>
 
           {filteredExams.length === 0 ? (
-            <p className="text-center py-4 text-red-500">No data found</p>
+            <p className="text-center py-4 text-red-500">
+              Ntakizamini cyishyuye ufite
+            </p>
           ) : (
             <div className="grid md:grid-cols-3 w-full gap-4 md:gap-3 py-1">
               {currentExams.map((exam, index) => {
-                const isLearn = exam.itemId.type
+                const iskwiga = exam.itemId.type
                   .toLowerCase()
-                  .includes("learn");
-                const buttonColor = isLearn ? "bg-yellow-500" : "bg-green-500";
-                const buttonText = isLearn ? "Learn Exam" : "Do Exam";
+                  .includes("kwiga");
+                const buttonColor = iskwiga ? "bg-yellow-500" : "bg-green-500";
+                const buttonText = iskwiga ? "kwiga ikizami" : "gukora ikizami";
                 return (
                   <ExamsCard
                     key={index}
@@ -157,7 +163,7 @@ const StudentWaiting = () => {
           )}
 
           {totalPages > 1 && (
-            <div className="flex justify-around md:gap-[830px] gap-[120px] md:pb-0 pt-3 px-10">
+            <div className="flex justify-around md:gap-[700px] gap-[120px] md:pb-0 pt-3 px-10">
               <div>
                 <button
                   className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${

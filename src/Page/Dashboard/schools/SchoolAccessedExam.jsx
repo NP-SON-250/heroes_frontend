@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MdOutlineContentPasteSearch } from "react-icons/md";
-import Logo from "../../../assets/logo.png";
+import Police from "../../../assets/Policelogo.png";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import ContinueCard from "../../../Components/Cards/ContinueCard";
 import ConfirmCard from "../../../Components/Cards/ConfirmCard";
@@ -14,7 +14,7 @@ const SchoolAccessedExam = () => {
   const [showContinueCard, setShowContinueCard] = useState(false);
   const [showConfirmCard, setShowConfirmCard] = useState(false);
   const [exam, setExam] = useState({ data: [] });
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
   const location = useLocation();
 
   const params = new URLSearchParams(location.search);
@@ -54,14 +54,14 @@ const SchoolAccessedExam = () => {
   const handleNotReady = () => {
     setExamId("");
     setIsSearched(false);
-    navigate(`/schools/accessedexam`);
+    navkwigate(`/schools/accessedexam`);
   };
 
   const handleStartExam = () => {
-    if (exam?.type === "Learn" || exam?.type === "learn") {
-      navigate(`/schoolsliveLearn?id=${examId}`);
-    } else if (exam?.type === "Test" || exam?.type === "test") {
-      navigate(`/schoolsliveExam?id=${examId}`);
+    if (exam?.type === "kwiga" || exam?.type === "kwiga") {
+      navkwigate(`/schoolslivekwiga?id=${examId}`);
+    } else if (exam?.type === "gukora" || exam?.type === "gukora") {
+      navkwigate(`/schoolsliveExam?id=${examId}`);
     } else {
       alert("Invalid exam type.");
     }
@@ -81,8 +81,6 @@ const SchoolAccessedExam = () => {
   const handleCloseConfirmCard = () => {
     setShowConfirmCard(false);
   };
-
-  // Get user info from localStorage
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser && storedUser !== "undefined") {
@@ -101,18 +99,18 @@ const SchoolAccessedExam = () => {
         <div className="flex justify-center items-center gap-3 border border-gray-400 text-center w-full bg-blue-100 py-0 rounded-md">
           <MdOutlineContentPasteSearch size={24} className="text-blue-900" />
           <h1 className="text-center md:text-3xl text-base text-blue-900">
-            Examination Tracking Center
+            Ishakiro ry'ikizamini
           </h1>
         </div>
 
         {!isSearched ? (
           <div className="flex flex-col justify-center">
             <div className="flex justify-center items-center">
-              <img src={Logo} alt="Logo   Logo" className="w-24 py-3" />
+              <img src={Police} alt="Police Logo" className="w-24 py-3" />
             </div>
             <div className="flex flex-col gap-4">
               <p className="capitalize font-bold text-lg text-center">
-                Enter your examination access id
+                Shyiramo kode yawe y'ikizamini yemewe
               </p>
               <div className="w-full md:px-3 md:pb-16 flex justify-center items-center px-6 pb-24 relative">
                 <input
@@ -126,7 +124,7 @@ const SchoolAccessedExam = () => {
                   onClick={handleSearch}
                   className="absolute md:right-[240px] right-6 bg-blue-500 cursor-pointer rounded-r-full p-2 text-white"
                 >
-                  Search
+                  Shaka
                 </button>
               </div>
             </div>
@@ -142,12 +140,12 @@ const SchoolAccessedExam = () => {
                         colSpan="2"
                         className="border border-gray-400 px-1 md:text-base text-xs text-center text-blue-800"
                       >
-                        Examination Details
+                        Ibiranga Ikizamini
                       </td>
                     </tr>
                     <tr>
                       <td className="border border-gray-400 p-1 font-bold">
-                        Exam Title
+                        Ikizamini
                       </td>
                       <td className="border border-gray-400 p-1">
                         {exam.title}
@@ -155,13 +153,13 @@ const SchoolAccessedExam = () => {
                     </tr>
                     <tr>
                       <td className="border border-gray-400 p-1 font-bold">
-                        Exam Access Id
+                        Kode y'ikizamini
                       </td>
                       <td className="border border-gray-400 p-1">{examId}</td>
                     </tr>
                     <tr>
                       <td className="border border-gray-400 p-1 font-bold">
-                        Fees
+                        Igiciro cy'ikizamini
                       </td>
                       <td className="border border-gray-400 p-1">
                         {exam.fees}
@@ -172,7 +170,7 @@ const SchoolAccessedExam = () => {
                       <>
                         <tr>
                           <td className="border border-gray-400 px-1 md:text-base text-xs bg-blue-100 text-start text-blue-900">
-                            School Granted:
+                            Ibiranga Ikigo:
                           </td>
                           <td className="border border-gray-400 px-1 md:text-base text-xs bg-blue-100 text-start text-blue-900">
                             {userName?.companyName}
@@ -180,15 +178,15 @@ const SchoolAccessedExam = () => {
                         </tr>
                         <tr>
                           <td className="border border-gray-400 px-1">
-                            School Owner
+                            TIN y'ikigo
                           </td>
                           <td className="border border-gray-400 px-1">
-                            {userName?.companyName}
+                            {userName?.tin}
                           </td>
                         </tr>
                         <tr>
                           <td className="border border-gray-400 px-1">
-                            School Address
+                            Aho Ikigo giherereye
                           </td>
                           <td className="border border-gray-400 px-1">
                             {userName?.address}
@@ -196,7 +194,7 @@ const SchoolAccessedExam = () => {
                         </tr>
                         <tr>
                           <td className="border border-gray-400 px-1">
-                            School Phone
+                            Telephone y'ikigo
                           </td>
                           <td className="border border-gray-400 px-1">
                             {userName.phone}
@@ -207,19 +205,19 @@ const SchoolAccessedExam = () => {
                   </tbody>
                 </table>
                 <div className="flex md:flex-row flex-col justify-center w-full items-center gap-4 md:py-2 py-6">
-                  <p>Are you ready to start the exam?</p>
+                  <p>Ese witeguye gutangira ikizamini?</p>
                   <div className="flex gap-6">
-                    <button
-                      className="bg-blue-500 text-white px-2 py-1 md:w-[100px] w-[80px] rounded-full"
-                      onClick={handleShowContinueCard}
-                    >
-                      Yes
-                    </button>
                     <button
                       className="bg-yellow-500 text-white px-2 py-1 md:w-[200px] w-[160px] rounded-full"
                       onClick={handleNotReady}
                     >
-                      I'm Not Ready
+                      Oya
+                    </button>
+                    <button
+                      className="bg-blue-500 text-white px-2 py-1 md:w-[100px] w-[80px] rounded-full"
+                      onClick={handleShowContinueCard}
+                    >
+                      Yego
                     </button>
                   </div>
                 </div>
@@ -230,8 +228,6 @@ const SchoolAccessedExam = () => {
           </div>
         )}
       </div>
-
-      {/* Continue Card Popup */}
       {showContinueCard && (
         <ContinueCard
           code={examId}
@@ -240,8 +236,6 @@ const SchoolAccessedExam = () => {
           onChange={(e) => setExamId(e.target.value)}
         />
       )}
-
-      {/* Confirm Card Popup */}
       {showConfirmCard && (
         <ConfirmCard
           code={examId}
