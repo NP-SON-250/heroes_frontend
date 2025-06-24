@@ -29,7 +29,7 @@ const Home = () => {
           <div>
             <p className="text-start md:text-md text-md text-blue-500 py-4 px-0">
               Uhereye uyuminsi iyandikishe kuri sisteme yacu, maze wisanzure
-              n'ibisubizo bigezweho Congozi Expert yabazaniye; Aho ushobora
+              n'ibisubizo bigezweho Heroes Technology yabazaniye; Aho ushobora
               kwimenyereza gugukora ibizamini bya provisoir Online, ndetse no
               kwiga ukoresheje ibizamini bisubije neza!
             </p>
@@ -53,7 +53,7 @@ const Home = () => {
         <div className=" md:-ml-[320px] flex flex-col justify-center bg-blue-500 pb-[50px] ">
           <div className="flex flex-col">
             <p className="text-white text-start md:px-16 px-5 py-2 font-semibold">
-              Ubu nawe wakoresha igihe cyawe neza! Hamwe na Congozi Expert,
+              Ubu nawe wakoresha igihe cyawe neza! Hamwe na Heroes Technology,
               wakwiga amategeko y'umuhanda wifashishije uburyo bugezweho bwo
               kwimenyereza gugukora ikizamini cya provisoir aribwo Online
               wibereye iwawe.
@@ -64,19 +64,19 @@ const Home = () => {
             <div className="flex justify-start md:px-2 px-5 items-center text-start gap-4 ">
               <LuPhoneCall className="text-white text-2xl font-semibold" />
               <p className="text-center text-lg text-white">
-                +250 783 905 790 | 722 558 842
+                +250 789 394 424 | 792 337 053
               </p>
             </div>
             <div className="flex justify-start md:px-0 px-5 items-center gap-4">
               <MdEmail className="text-white text-2xl font-semibold" />
               <p className="text-center text-lg text-white underline">
-                info@congozi.rw
+                herostechnology.ltd@gmail.com
               </p>
             </div>
             <div className="flex justify-start md:px-0 px-5 items-center gap-4">
               <HiHome className="text-white text-2xl font-semibold" />
               <p className="text-center text-lg text-white">
-                Nyagatare, Rwanda
+                Huye, Butare
               </p>
             </div>
           </div>

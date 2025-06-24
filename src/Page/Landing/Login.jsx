@@ -77,7 +77,7 @@ const Login = () => {
   }, []);
 
   return (
-    <div className="pt-24 md:px-12">
+    <div className=" pt-20 md:px-12">
       <div className="grid md:grid-cols-2 grid-cols-1 rounded-r-md rounded-b-none md:border border-blue-700">
         <div className="flex justify-end md:h-[60vh]">
           <img src={Injira} alt="Login Illustration" />
@@ -91,8 +91,8 @@ const Login = () => {
             </p>
           </div>
 
-          <p className="text-lg md:px-20 p-2 text-center">
-            Kugirango ubone amakuru yawe n'ibizamini ndetse na serivisi zitangwa
+          <p className="text-lg md:px-20 p-2 md:text-center text-start">
+            Kugirango ubone amakuru yawe ku bizamini ndetse na serivisi zitangwa
             na Heroes Technology. Ugomba kubanza kwinjira
           </p>
 
@@ -123,9 +123,9 @@ const Login = () => {
             Saba Kwinjira
           </button>
 
-          <div className="md:flex-row flex-col flex justify-center items-center md:gap-10 gap-4 mt-4">
+          <div className="md:flex-row flex-col flex justify-center items-center md:gap-10 gap-4 md:mt-0 mt-4">
             <Link to="/hindura">
-              <p className="flex justify-center items-center gap-2 text-blue-500 text-md">
+              <p className="flex justify-center items-center gap-2 text-blue-500 text-md hover:text-yellow-700">
                 <FaQuestionCircle /> Wibagiwe Ijambobanga?
               </p>
             </Link>
@@ -133,7 +133,7 @@ const Login = () => {
               Nta konti ufite?
               <Link
                 to="/kwiyandikisha"
-                className="text-xl text-blue-800 font-semibold ml-1"
+                className="text-xl text-blue-800 font-semibold ml-1 hover:text-yellow-700"
               >
                 Yifungure
               </Link>

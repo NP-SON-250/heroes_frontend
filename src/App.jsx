@@ -47,7 +47,7 @@ const App = () => {
   if (loading) return <div>Loading...</div>;
   return (
     <>
-      <div className="overflow-x-hidden font-Poppins">
+      <div className="overflow-x-hidden font-museo">
         <Routes>
           <Route element={<LandingLay />}>
             <Route path="/" element={<Home />}></Route>

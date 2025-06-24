@@ -218,7 +218,7 @@ const Register = () => {
                 Profile
               </label>
               <div
-                className="flex cursor-pointer lg:w-32 w-32 px-4 border-desired"
+                className="flex cursor-pointer lg:w-32 w-36 px-4 border-desired"
                 onClick={handleFileTrigger}
               >
                 <input

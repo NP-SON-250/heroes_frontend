@@ -22,7 +22,7 @@ const StudentMarket = () => {
   const [exam, setExam] = useState({ data: [] });
   const [userName, setUserName] = useState("");
 
-  const navkwigate = useNavigate();
+  const navigate = useNavigate();
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser && storedUser !== "undefined") {
@@ -85,109 +85,6 @@ const StudentMarket = () => {
     setSelectedExam(exam);
     setPaymentStep("confirmation");
   };
-
-  const handleProceedToPayment = async () => {
-    if (isProcessingPayment) return;
-
-    setIsProcessingPayment(true);
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.post(
-        `https://heroes-backend-wapq.onrender.com/api/v1/purchases/${selectedExam._id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setPaymentStep("payment");
-      setPaid(response.data?.data?.purchase._id);
-    } catch (error) {
-      if (error.response && error.response.status === 404) {
-        alert("You have already purchased this exam.");
-      } else {
-        console.error("Purchase request failed:", error);
-        alert("Failed to initiate purchase. Please try again.");
-      }
-    } finally {
-      setIsProcessingPayment(false);
-    }
-  };
-
-  const purchasedItem = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const purchasedId = paid;
-      const response = await axios.get(
-        `https://heroes-backend-wapq.onrender.com/api/v1/purchases/${purchasedId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.data?.data?.invoiceNumber) {
-        const invoiceNumbers = response.data.data.invoiceNumber;
-        return invoiceNumbers;
-      }
-      return null;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
-
-  const makePayment = async () => {
-    if (isProcessingPayment) return;
-
-    setIsProcessingPayment(true);
-    try {
-      const invoiceNumber = await purchasedItem();
-
-      if (!invoiceNumber) {
-        toast.error("No invoice number available");
-        return;
-      }
-
-      IremboPay.initiate({
-        publicKey: "pk_live_111e50f65489462684098ebea001da06",
-        invoiceNumber: invoiceNumber,
-        locale: IremboPay.locale.RW,
-        callback: async (err, resp) => {
-          if (!err) {
-            try {
-              const token = localStorage.getItem("token");
-              const purchasedId = paid;
-
-              const response = await axios.put(
-                `https://heroes-backend-wapq.onrender.com/api/v1/purchases/${purchasedId}`,
-                { status: "complete" },
-                {
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                  },
-                }
-              );
-
-              toast.success("Kwishyura byakunze.");
-              closePopup();
-              navkwigate(`/students/waitingexams`);
-              fetchData();
-            } catch (error) {
-              toast.error("Kwishyura byanze.");
-              console.error("Ikibazo:", error);
-            }
-          }
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsProcessingPayment(false);
-    }
-  };
   const handlePayLaterClick = async () => {
     if (isPayingLater) return;
 
@@ -204,6 +101,7 @@ const StudentMarket = () => {
         }
       );
       closePopup();
+      navigate("/students/exams");
     } catch (error) {
       console.log(error);
     } finally {
@@ -307,7 +205,7 @@ const StudentMarket = () => {
 
       {selectedExam && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[999]">
-          <div className="bg-Total rounded-lg shadow-lg md:max-w-3xl w-full text-center relative">
+          <div className="bg-Total rounded-lg shadow-lg md:max-w-md w-full text-center relative">
             {paymentStep === "confirmation" ? (
               <>
                 <button
@@ -320,66 +218,24 @@ const StudentMarket = () => {
                   Mukiriya {userName?.fName} {userName?.lName},
                 </h2>
                 <p className="mt-0 text-start text-white px-6">
-                  Ugiye kugura ikizamini {selectedExam.number} cyo{" "}
-                  {selectedExam.type} ishyura ayamafaranga ({selectedExam.fees}{" "}
-                  RWF) maze uhabwe kode yo gufungura ikizamini cyawe. Ufite
-                  ikibazo hamagara kuri iyi nimero: 0783905790
+                  Ugiye gusaba kugura ikizamini {selectedExam.number} cy'ubwoko
+                  bwo {selectedExam.type} uribwishyure ayamafaranga (
+                  {selectedExam.fees} RWF). Ufite ikibazo hamagara kuri iyi
+                  nimero: 0789394424
                 </p>
                 <div className="flex justify-center md:p-6 p-2 md:mt-12 mt-6 mb-2 md:gap-20 gap-6">
                   <button
-                    className={`bg-yellow-500 text-white px-2 py-1 rounded ${
+                    className={`bg-green-500  w-full text-white p-2 rounded ${
                       isPayingLater ? "opacity-50 cursor-not-allowed" : ""
                     }`}
                     onClick={handlePayLaterClick}
                     disabled={isPayingLater}
                   >
-                    {isPayingLater ? <LoadingSpinner /> : "Ishyura Mukanya"}
-                  </button>
-                  <button
-                    className={`bg-green-500 text-white px-2 py-1 rounded ${
-                      isProcessingPayment ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
-                    onClick={handleProceedToPayment}
-                    disabled={isProcessingPayment}
-                  >
-                    {isProcessingPayment ? (
-                      <LoadingSpinner />
-                    ) : (
-                      "Ishyura Nonaha"
-                    )}
+                    {isPayingLater ? <LoadingSpinner /> : "Saba kugura"}
                   </button>
                 </div>
               </>
-            ) : (
-              <div className="flex flex-col pb-14">
-                <h2 className="text-lg text-start font-bold text-white px-6 pt-6">
-                  Mukiriya {userName?.fName} {userName?.lName},
-                </h2>
-                <p className="mt-0 text-start text-white px-6">
-                  Ugiye kugura ikizamini {selectedExam.number} cyo{" "}
-                  {selectedExam.type} ishyura ayamafaranga ({selectedExam.fees}{" "}
-                  RWF) maze uhabwe kode yo gufungura ikizamini cyawe. Ufite
-                  ikibazo hamagara kuri iyi nimero:{" "}
-                  <span className="text-yellow-600 font-semibold pl-2">
-                    0783905790
-                  </span>
-                </p>
-                <div className="flex justify-center md:gap-24 gap-10 pt-10">
-                  <button
-                    className="bg-red-500 text-white px-2 py-1 rounded"
-                    onClick={closePopup}
-                  >
-                    Hagarika kwishyura
-                  </button>
-                  <button
-                    className="bg-green-500 text-white px-2 py-1 rounded"
-                    onClick={makePayment}
-                  >
-                    Soza Kwishyura
-                  </button>
-                </div>
-              </div>
-            )}
+            ) : null}
           </div>
         </div>
       )}

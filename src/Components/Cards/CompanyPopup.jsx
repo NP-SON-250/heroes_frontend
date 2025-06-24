@@ -67,7 +67,7 @@ const CompanyPopup = ({ onClose }) => {
           <strong className="pr-2">Ikikigo!</strong>
           cyangwa uwabisabye hamagara:
           <span className="text-orange-400 font-semibold text-lg pl-2">
-            0783905790
+            0789394424
           </span>
         </p>
 

@@ -1,235 +1,273 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import AccountCard from "../../../Components/Cards/AdminCards/AccountCard";
+import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
+import { FaHandHoldingDollar } from "react-icons/fa6";
+import Mtn from "../../../assets/MTN.jpg";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
-import {
-  FaCartPlus,
-  FaEdit,
-  FaArrowAltCircleRight,
-  FaArrowAltCircleLeft,
-} from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-
-const getCurrentDate = () => {
-  const today = new Date();
-  const day = String(today.getDate()).padStart(2, "0");
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  const year = today.getFullYear();
-  return `${day}/${month}/${year}`;
-};
+import axios from "axios";
 
 const SchoolMyExams = () => {
-  const [allAccounts, setAllAccounts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [accountsPerPage, setAccountsPerPage] = useState(6);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [validIn, setvalidIn] = useState("");
+  const [fees, setFees] = useState("");
   const [selectedAccount, setSelectedAccount] = useState(null);
-  const accountsPerPage = 4;
-  const navkwigate = useNavigate();
+  const [paymentStep, setPaymentStep] = useState("confirmation");
 
-  const fetchAccounts = async () => {
-    const token = localStorage.getItem("token");
+  const [account, setAccount] = useState({ data: [] });
+  const [userName, setUserName] = useState("");
+  const [phoneUsed, setPhoneUsed] = useState("");
+  const [ownerName, setOwnerName] = useState("");
+  const [message, setMessage] = useState({ text: "", type: "" });
+  // Get user info from localStorage
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      setUserName(`${user.companyName}`);
+    }
+  }, []);
+  // Fetch unpaid accounts
+  const fetchData = async () => {
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
+      const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://heroes-backend-wapq.onrender.com/api/v1/purchases/user",
-        config
+        "https://heroes-backend-wapq.onrender.com/api/v1/purchases/pending",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-      const result = response.data?.data;
-      setAllAccounts(Array.isArray(result) ? result : [result]);
+      setAccount(response.data);
     } catch (error) {
-      console.error("Error fetching exam data:", error);
+      console.error("Error fetching data:", error);
     }
   };
 
   useEffect(() => {
-    fetchAccounts();
+    fetchData();
   }, []);
 
-  const indexOfLastAccount = currentPage * accountsPerPage;
-  const indexOfFirstExam = indexOfLastAccount - accountsPerPage;
-  const currentAccounts = allAccounts.slice(
-    indexOfFirstExam,
-    indexOfLastAccount
+  // Adjust items per page on screen resize
+  useEffect(() => {
+    const updateaccountsPerPage = () => {
+      setAccountsPerPage(window.innerWidth >= 768 ? 6 : 2);
+    };
+    updateaccountsPerPage();
+    window.addEventListener("resize", updateaccountsPerPage);
+    return () => window.removeEventListener("resize", updateaccountsPerPage);
+  }, []);
+
+  const filteredAccounts = account.data.filter(
+    (item) =>
+      (validIn === "" ||
+        item.itemId.validIn?.toLowerCase().includes(validIn.toLowerCase())) &&
+      (fees === "" || item.itemId.fees?.toString().includes(fees)) &&
+      (searchTerm === "" ||
+        item.itemId.validIn?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.itemId.fees?.toString().includes(searchTerm) ||
+        item.itemId.title?.includes(searchTerm))
   );
-  const totalPages = Math.ceil(allAccounts.length / accountsPerPage);
 
-  const handleDoAccount = (account) => {
-    if (account.accessCode && account.accessCode.length > 0) {
-      navkwigate(`/schools/accessableexams?accessCode=${account.accessCode}`);
-    } else {
-      console.error("No access code available for this account.");
-    }
+  const totalPages = Math.ceil(filteredAccounts.length / accountsPerPage);
+  const currentAccounts = filteredAccounts.slice(
+    currentPage * accountsPerPage,
+    (currentPage + 1) * accountsPerPage
+  );
+
+  const handlePurchaseClick = (account) => {
+    setSelectedAccount(account);
+    setPaymentStep("payment");
   };
-  const makePayment = (invoiceNumber, account) => {
-    IremboPay.initiate({
-      publicKey: "pk_live_111e50f65489462684098ebea001da06",
-      invoiceNumber: invoiceNumber,
-      locale: IremboPay.locale.RW,
-      callback: async (err, resp) => {
-        if (!err) {
-          setSelectedAccount(account);
-          try {
-            const token = localStorage.getItem("token");
-            const purchaseId = account._id;
 
-            const response = await axios.put(
-              `https://heroes-backend-wapq.onrender.com/api/v1/purchases/${purchaseId}`,
-              { status: "complete" },
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
-
-            toast.success("Kwishyura byakunze.");
-            closePopup();
-            navkwigate(`/schools/accounts`);
-            fetchAccounts();
-          } catch (error) {
-            toast.error("Kwishyura byanze.");
-            console.error("Ikibazo:", error);
-          }
-        } else {
-          console.error("Payment error:", err);
-        }
-      },
-    });
-  };
   const closePopup = () => {
     setSelectedAccount(null);
+    setPaymentStep("confirmation");
+    setPhoneUsed("");
+    setOwnerName("");
   };
-  const getRemainingDays = (endDate) => {
-    if (!endDate) return "N/A";
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+  const handleNotify = async () => {
+    if (!phoneUsed || !ownerName) {
+      setMessage({
+        text: "Wongera uzuzise nimero ya telephone n'amazina y'umunyamikoro",
+        type: "error",
+      });
+      setTimeout(() => setMessage({ text: "", type: "" }), 9000);
+      return;
+    }
 
-    const end = new Date(endDate);
-    end.setHours(0, 0, 0, 0);
+    try {
+      const token = localStorage.getItem("token");
+      const purchasedDataId = selectedAccount._id;
+      const paidItem = selectedAccount.itemId;
+      const notificationMessage = `Dear Admin, Turakumenyesha ko ${userName} yishyuye konte yitwa ${paidItem.title} izarangira muminsi ${paidItem.validIn} amafaranga ${paidItem.fees} Rwf akoresheje telephone ${phoneUsed} ibaruye kuri ${ownerName}. Reba ko wayabonye kuri telephone nimero: 0789394424 maze umuhe uburenganzira kuri iyi purchase Id: ${purchasedDataId}. Murakoze!!!!!`;
+      const noteTitle = `${userName} requests for approval`;
+      const response = await axios.post(
+        "https://heroes-backend-wapq.onrender.com/api/v1/notification",
+        {
+          message: notificationMessage,
+          noteTitle: noteTitle,
+          purchasedItem: purchasedDataId,
+          ownerName: userName,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    const diffTime = end - today;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays < 0) return "Expired";
-    if (diffDays === 0) return "Today";
-    return `${diffDays} Days`;
+      const purchaseId = selectedAccount._id;
+      await axios.put(
+        `https://heroes-backend-wapq.onrender.com/api/v1/purchases/${purchaseId}`,
+        { status: "waitingConfirmation" },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      await axios.delete(
+        `https://heroes-backend-wapq.onrender.com/api/v1/unpaidaccounts/${paidItem._id}`
+      );
+      setMessage({
+        text: response.data.message || "Kwishyura byakunze neza!",
+        type: "success",
+      });
+      setTimeout(() => setMessage({ text: "", type: "" }), 9000);
+
+      closePopup();
+      fetchData();
+    } catch (error) {
+      setMessage({
+        text: "Kwishyura byanze. Wongera gerageza.",
+        type: "error",
+      });
+      setTimeout(() => setMessage({ text: "", type: "" }), 9000);
+      console.error("Payment error:", error);
+      closePopup();
+      fetchData();
+    }
   };
+
   return (
-    <div className="md:p-2 flex gap-2 flex-col">
+    <div className="flex flex-col justify-center items-center md:px-5 gap-1 bg-white md:p-2">
       <WelcomeDear />
-      <div className="flex justify-center items-center gap-4 text-blue-900 font-bold py-2 border bg-gray-100 rounded-md">
-        <h1>My Accounts</h1>
-      </div>
 
-      <div className="overflow-x-auto rounded-lg shadow border border-blue-900">
-        <div className="min-w-full inline-block align-middle">
-          <table className="min-w-full table-auto">
-            <thead>
-              <tr className="bg-gray-100 border text-blue-900 md:text-base text-xs font-bold">
-                <th className="px-6 py-2 whitespace-nowrap">No.</th>
-                <th className="px-6 py-2 whitespace-nowrap">
-                  Izina ry'ikikizamini
-                </th>
-                <th className="px-6 py-2 whitespace-nowrap">Iminsi izamara</th>
-                <th className="px-6 py-2 whitespace-nowrap">
-                  Izarangira muminsi
-                </th>
-                <th className="px-6 py-2 whitespace-nowrap">Itariki</th>
-                <th className="px-6 py-2 whitespace-nowrap">Igiciro</th>
-                <th className="px-6 py-2 whitespace-nowrap">Imimerere</th>
-                <th className="px-6 py-2 whitespace-nowrap">Igikorwa</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentAccounts.map((account, index) => {
-                const endDate = account.endDate
-                  ? new Date(account.endDate)
-                  : null;
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-
-                const diffDays = endDate
-                  ? Math.ceil(
-                      (endDate.setHours(0, 0, 0, 0) - today) /
-                        (1000 * 60 * 60 * 24)
-                    )
-                  : null;
-
-                const isExpired = diffDays !== null && diffDays < 0;
-
-                return (
-                  <tr
-                    key={account._id}
-                    className="bg-white border text-blue-900 md:text-base text-xs"
-                  >
-                    <td className="px-6 py-2 whitespace-nowrap md:tex-md text-xs">
-                      {indexOfFirstExam + index + 1}
-                    </td>
-                    <td className="px-6 py-2 whitespace-nowrap md:tex-md text-xs">
-                      {account.itemId?.title}
-                    </td>
-                    <td className="px-6 py-2 whitespace-nowrap md:tex-md text-x">
-                      {account.itemId?.validIn} Days
-                    </td>
-                    <td className="px-6 py-2 whitespace-nowrap md:tex-md text-x">
-                      {getRemainingDays(account.endDate)}
-                    </td>
-                    <td className="px-6 py-2 whitespace-nowrap md:tex-md text-xs">
-                      {getCurrentDate()}
-                    </td>
-                    <td className="px-6 py-2 whitespace-nowrap md:tex-md text-xs">
-                      {account.amount}
-                    </td>
-                    <td className="px-6 py-2 whitespace-nowrap md:tex-md text-xs">
-                      {account.status}
-                    </td>
-                    <td className="px-6 py-2 whitespace-nowrap">
-                      {isExpired ? (
-                        <button className="text-blue-900 py-1 px-3" disabled>
-                          -
-                        </button>
-                      ) : account.status === "pending" ? (
-                        <button
-                          title="Pay"
-                          onClick={() => {
-                            makePayment(account.invoiceNumber, account);
-                          }}
-                          className="text-blue-900 py-1 px-3 flex md:tex-xs text-xs items-center gap-2"
-                        >
-                          <FaCartPlus />
-                        </button>
-                      ) : account.status === "complete" ? (
-                        <button
-                          onClick={() => handleDoAccount(account)}
-                          className="text-blue-900 py-1 px-3 md:tex-xs text-xs flex items-center gap-2"
-                        >
-                          <FaEdit />
-                        </button>
-                      ) : (
-                        <button className="text-blue-900 py-1 px-3" disabled>
-                          -
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+      {/* Filters */}
+      <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
+        <input
+          type="text"
+          placeholder="---Shaka ukoresheje igihe konte izarangirira---"
+          value={validIn}
+          onChange={(e) => setvalidIn(e.target.value)}
+          className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer"
+        />
+        <input
+          type="text"
+          placeholder="---Shaka n'igiciro---"
+          value={fees}
+          onChange={(e) => setFees(e.target.value)}
+          className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer"
+        />
+        <div className="w-full px-3 md:flex justify-center items-center hidden">
+          <input
+            type="search"
+            placeholder="Shaka konte n'igiciro cg iminsi"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="border-2 border-blue-500 p-2 rounded-xl w-full"
+          />
         </div>
       </div>
+
+      <div className="w-full px-3 pb-3 flex justify-center items-center md:hidden">
+        <input
+          type="search"
+          placeholder="Shaka konte n'igiciro cg iminsi"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border-2 border-blue-500 p-2 rounded-xl w-full"
+        />
+      </div>
+      {message.text && (
+        <div
+          className={`flex justify-center z-50 p-4 rounded-md shadow-lg ${
+            message.type === "success"
+              ? "bg-green-100 text-green-800 border border-green-300"
+              : "bg-red-100 text-red-800 border border-red-300"
+          }`}
+        >
+          <div className="flex items-center">
+            {message.type === "success" ? (
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            ) : (
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            )}
+            <span>{message.text}</span>
+          </div>
+        </div>
+      )}
+      {/* account Cards */}
+      {filteredAccounts.length === 0 ? (
+        <p className="text-center py-4 text-red-500">No data found</p>
+      ) : (
+        <div className="grid md:grid-cols-3 w-full gap-4 md:gap-3 py-1">
+          {currentAccounts.map((accountItem, index) => {
+            const account = accountItem.itemId;
+            const buttonColor =
+              account.validIn >= 30 ? "bg-green-500" : "bg-yellow-500";
+            return (
+              <AccountCard
+                key={index}
+                title={`Account ${currentPage * accountsPerPage + index + 1}: ${
+                  account.title
+                }`}
+                fees={account.fees}
+                validIn={account.validIn}
+                onPurchase={() => handlePurchaseClick(accountItem)}
+                icon={<FaHandHoldingDollar />}
+                button={"Soza Kwishyura"}
+                buttonColor={buttonColor}
+              />
+            );
+          })}
+        </div>
+      )}
+
+      {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-around md:gap-[700px] gap-[80px] md:pb-0 pt-3 px-10">
+        <div className="flex justify-around md:gap-[830px] gap-[120px] md:pb-0 pt-3 px-10">
           <div>
             <button
               className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
-                currentPage === 1 ? "opacity-50" : ""
+                currentPage === 0 ? "opacity-50" : ""
               }`}
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
+              disabled={currentPage === 0}
             >
               <FaArrowAltCircleLeft size={24} /> Izibanza
             </button>
@@ -237,14 +275,12 @@ const SchoolMyExams = () => {
           <div>
             <button
               className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
-                currentPage === totalPages
-                  ? "opacity-50 cursor-not-allowed"
-                  : ""
+                currentPage === totalPages - 1 ? "opacity-50" : ""
               }`}
               onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))
               }
-              disabled={currentPage === totalPages}
+              disabled={currentPage === totalPages - 1}
             >
               Izikurira
               <FaArrowAltCircleRight size={24} />
@@ -252,7 +288,96 @@ const SchoolMyExams = () => {
           </div>
         </div>
       )}
-      <ToastContainer />
+
+      {/* Payment Popup */}
+      {selectedAccount && (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[999]">
+          <div className="bg-white rounded-lg shadow-lg md:max-w-3xl w-full text-center relative">
+            <button
+              className="absolute top-1 right-1 text-xl bg-white text-red-700 border-2 border-white rounded-full w-8 h-8 flex justify-center"
+              onClick={closePopup}
+            >
+              ✖
+            </button>
+            {paymentStep === "confirmation" ? (
+              <></>
+            ) : (
+              <div className="flex md:flex-row flex-col md:gap-6 gap-1">
+                <div className="text-left">
+                  <ul className="md:space-y-6 space-y-2 bg-gray-200 h-full p-4">
+                    <li className="text-blue-900 font-bold">
+                      <input type="radio" name="payment" checked readOnly /> MTN
+                      Mobile Money
+                    </li>
+                  </ul>
+                </div>
+                <div className="flex flex-col justify-center px-3 py-2">
+                  <p className="text-start">
+                    Kanda ino mibare kuri telefone yawe ukoreshe SIM kadi ya MTN
+                    maze <br />
+                    wishyure kuri:{" "}
+                    <span className="text-md font-semibold text-yellow-700">
+                      Vianney MUNYENWARI
+                    </span>
+                  </p>
+                  <p className="flex justify-center md:py-6 py-4 font-bold">
+                    <img src={Mtn} alt="" className="w-10 h-6" />
+                    *182*1*1*
+                    <span className="bg-green-400/20 border border-green-600">
+                      0789394424
+                    </span>
+                    *{selectedAccount.itemId.fees}#
+                  </p>
+                  <p className="text-md text-Total py-4 font-semibold text-cente">
+                    Tanga amakuru kunyemezavbwishyu yawe
+                  </p>
+                  <div className="w-full text-start">
+                    <label htmlFor="phone">Nimero wakoresheje wishyura</label>
+                    <input
+                      type="text"
+                      placeholder="Urugero: 0786731449"
+                      className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
+                      value={phoneUsed}
+                      onChange={(e) => setPhoneUsed(e.target.value)}
+                      required
+                    />
+                    <label htmlFor="phone">Amazina ibaruyeho</label>
+                    <input
+                      type="text"
+                      placeholder="Urugero: Vianney MUNYENWARI"
+                      className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
+                      value={ownerName}
+                      onChange={(e) => setOwnerName(e.target.value)}
+                      required
+                    />
+                    <button
+                      className="bg-green-500 text-white px-2 py-1 rounded mt-4 w-full"
+                      onClick={handleNotify}
+                    >
+                      Menyesha Ko Wishyuye
+                    </button>
+                    <p className="text-start py-2 font-medium">
+                      Nyuma yo kumenyekanisha ko wishyuye{" "}
+                      <span className="text-Total text-md font-semibold">
+                        muminota 5
+                      </span>{" "}
+                      urahabwa ubutumwa{" "}
+                      <span className="text-Total text-md font-semibold">
+                        kuri sisiteme hejuru
+                      </span>{" "}
+                      bukwemerera{" "}
+                      <span className="text-Total text-md font-semibold">
+                        gukora
+                      </span>{" "}
+                      ibizamini biri muri {selectedAccount.itemId.title}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

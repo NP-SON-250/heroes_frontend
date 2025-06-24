@@ -27,25 +27,16 @@ const RestPassword = () => {
           </p>
           <div className="flex flex-col items-start gap-4 md:w-[70%] w-full">
             <LoginInputs
-              label="Telefone cg Email"
+              label="Email"
               type="text"
               icon={<FaUser />}
-              placeholder="07XXX cg Email"
+              placeholder=" Email"
             />
 
             <div className="flex flex-col justify-center items-center w-full">
               <p className="text-center">Uburyo bwo kubona ubutumwa</p>
               <div className="flex justify-between items-center gap-6 mt-2">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="messageType"
-                    value="SMS"
-                    className="w-5 h-5 rounded-full accent-blue-600"
-                  />
-                  SMS
-                </label>
-                <label className="flex items-center gap-2">
+                <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="radio"
                     name="messageType"
@@ -65,7 +56,7 @@ const RestPassword = () => {
 
           <div className="md:flex-row flex-col flex justify-center items-center md:gap-10 gap-4">
             <Link to={"/kwinjira"}>
-              <p className="flex justify-center items-center gap-2 text-blue-500 text-md">
+              <p className="flex justify-center items-center gap-2 text-blue-500 text-md hover:text-yellow-700">
                 <RiLogoutCircleLine /> Garuka kwinjira
               </p>
             </Link>
@@ -73,7 +64,7 @@ const RestPassword = () => {
               Nta konti ufite?
               <Link
                 to={"/kwiyandikisha"}
-                className="text-xl text-blue-800 font-semibold"
+                className="md:text-base text-xl text-blue-800 font-semibold hover:text-yellow-700"
               >
                 Yifungure
               </Link>

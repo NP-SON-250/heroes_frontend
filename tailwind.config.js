@@ -9,6 +9,7 @@ export default {
       cardo: ["Cardo", "serif"],
       Roboto: ["Roboto", "sans-serif"],
       SourcePro: ["Source Sans Pro", "sans-serif"],
+      museo: ['"Museo Sans Cyrl"', "sans-serif"],
     },
     extend: {
       colors: {

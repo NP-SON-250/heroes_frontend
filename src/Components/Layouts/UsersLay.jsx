@@ -8,7 +8,7 @@ const UsersLay = ({ role }) => {
   const location = useLocation();
 
   const sectionMap = {
-    "/students/home": "ibigenewe Umunyeshuri",
+    "/students/home": "Ibigenewe Umunyeshuri",
     "/students/market": "Isoko ry'ibizamini",
     "/students/online": "Aho Bakorera Ikizamini",
     "/students/exams": "Ibizamini Byanjye",
@@ -30,7 +30,7 @@ const UsersLay = ({ role }) => {
   };
   const getCurrentYear = () => new Date().getFullYear();
   const currentSection =
-    sectionMap[location.pathname] || "ibigenewe Umunyeshuri";
+    sectionMap[location.pathname] || "Ibigenewe Umunyeshuri";
 
   return (
     <>
@@ -45,7 +45,7 @@ const UsersLay = ({ role }) => {
         <div className="md:fixed md:bottom-0 md:left-0 md:right-0 md:block hidden w-full">
           <div className="flex justify-center items-center h-[7.5vh] bg-Unpaid">
             <p className="md:p-[6px] p-5 text-blue-900 md:text-xs text-xs font-bold text-center uppercase">
-              &copy; {getCurrentYear()} Congozi Expert Technical Unity{" "}
+              &copy; {getCurrentYear()} Heroes Technology Technical Unity{" "}
               <span className="normal-case">Limited</span>
             </p>
           </div>

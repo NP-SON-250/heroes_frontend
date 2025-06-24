@@ -311,7 +311,7 @@ const SchoolMyAccount = () => {
                       <LoadingSpinner size={5} strokeWidth={2} />
                     </>
                   ) : (
-                    <>Emeza Guhindura</>
+                    <>Guhindura</>
                   )}
                 </>
               ) : (
@@ -321,7 +321,7 @@ const SchoolMyAccount = () => {
                       <LoadingSpinner size={5} strokeWidth={2} />
                     </>
                   ) : (
-                    <>Emeza Guhindura</>
+                    <>Guhindura</>
                   )}
                 </>
               )}

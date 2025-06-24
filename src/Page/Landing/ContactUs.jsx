@@ -17,15 +17,20 @@ const ContactUs = () => {
         <div className="flex flex-col justify-center items-start gap-3">
           <div className="flex justify-center items-start gap-4">
             <LuPhoneCall className="text-blue-500 text-2xl" />
-            <p className="md:text-md">+250 783 905 790 | 0722 558 842</p>
+            <p className="md:text-md">+250 789 394 424 | 792 337 053</p>
           </div>
           <div className="flex justify-center items-start gap-4">
             <MdEmail className="text-blue-500 text-2xl" />
-            <p className="md:text-md">info@congozi.rw</p>
+            <a
+              href="mailto:herostechnology.ltd@gmail.com"
+              className="md:text-md  hover:underline"
+            >
+              herostechnology.ltd@gmail.com
+            </a>
           </div>
           <div className="flex justify-center items-start gap-4">
             <HiHome className="text-blue-500 text-2xl" />
-            <p className="md:text-md">Iburasirazuba, Nyagatare | Rwamagana</p>
+            <p className="md:text-md">Amajyepfo, Huye | Butare</p>
           </div>
         </div>
       </div>

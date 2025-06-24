@@ -172,7 +172,7 @@ const LiveLearn = () => {
         <div className="text-center mt-10 text-Total font-semibold">
           <p>Ikikizami ntabibazo gifite. Hamagara Admin</p>
           <p>
-            kuri: <span className="text-orange-500">0783905790</span>
+            kuri: <span className="text-orange-500">0789394424</span>
           </p>
         </div>
       ) : (

@@ -174,7 +174,7 @@ const AdminsPayments = () => {
                       disabled={loadingId === payment.id}
                       className={`text-blue-600 ${
                         loadingId === payment.id
-                          ? "bg-yellow-700"
+                          ? "text-green-700"
                           : "hover:text-yellow-700"
                       }`}
                     >
