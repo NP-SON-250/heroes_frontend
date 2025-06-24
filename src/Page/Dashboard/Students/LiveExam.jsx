@@ -296,7 +296,7 @@ const LiveExam = () => {
                   `examTimeLeft_${examCode}_${paidExam._id}`
                 );
               }}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+              className="bg-Total text-white px-4 py-2 rounded hover:bg-blue-600 transition"
             >
               Reba ibisubizo
             </button>
@@ -368,9 +368,7 @@ const LiveExam = () => {
                   onClick={() => !examFinished && setSelectedQuestion(idx)}
                   disabled={examFinished}
                   className={`w-20 h-10 text-sm rounded-md flex justify-center items-center 
-                    ${
-                      isAnswered ? "bg-blue-500 text-white" : "bg-white border"
-                    } 
+                    ${isAnswered ? "bg-Total text-white" : "bg-white border"} 
                     ${examFinished ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   Ikibazo: {idx + 1}
@@ -410,7 +408,7 @@ const LiveExam = () => {
                         <div
                           className={`w-3 h-3 rounded-full border flex items-center justify-center transition ${
                             isSelected
-                              ? "bg-blue-500 text-white"
+                              ? "bg-Total text-white"
                               : "bg-white border-gray-600"
                           }`}
                         >

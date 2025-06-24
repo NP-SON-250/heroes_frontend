@@ -8,7 +8,7 @@ const LoginInputs = ({ label, type, placeholder, value, onChange, icon }) => {
   return (
     <div className="flex flex-col gap-3 w-full md:pl-4 px-4">
       <div className="flex gap-2 justify-start items-center">
-        <div className="flex justify-center items-center p-2 bg-blue-500 rounded-full">
+        <div className="flex justify-center items-center p-2 bg-Total rounded-full">
           <span className="text-white">{icon}</span>
         </div>
         <label className="text-gray-700 font-medium">{label}:</label>

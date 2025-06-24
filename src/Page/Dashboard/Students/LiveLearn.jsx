@@ -205,10 +205,10 @@ const LiveLearn = () => {
                 const isInteracted = interactedQuestions.includes(idx);
 
                 const getButtonClasses = () => {
-                  if (isCurrent) return "bg-blue-500 text-white";
+                  if (isCurrent) return "bg-Total text-white";
 
                   return isInteracted
-                    ? "bg-blue-500 text-white"
+                    ? "bg-Total text-white"
                     : "bg-white border";
                 };
 

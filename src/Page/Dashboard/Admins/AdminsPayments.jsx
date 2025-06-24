@@ -198,7 +198,7 @@ const AdminsPayments = () => {
           className={`px-4 py-1 rounded ${
             currentPage === 1
               ? "bg-gray-300 cursor-not-allowed"
-              : "bg-blue-500 text-white hover:bg-blue-600"
+              : "bg-Total text-white hover:bg-blue-600"
           }`}
         >
           Previous
@@ -214,7 +214,7 @@ const AdminsPayments = () => {
           className={`px-4 py-1 rounded ${
             currentPage === totalPages
               ? "bg-gray-300 cursor-not-allowed"
-              : "bg-blue-500 text-white hover:bg-blue-600"
+              : "bg-Total text-white hover:bg-blue-600"
           }`}
         >
           Next

@@ -112,9 +112,9 @@ const SchoolLiveLearn = () => {
                     className={`w-20 h-10 text-sm rounded-md flex justify-center items-center 
                       ${
                         selectedQuestion === idx
-                          ? "bg-blue-500 text-white"
+                          ? "bg-Total text-white"
                           : viewedQuestions.includes(idx)
-                          ? "bg-blue-500 text-white"
+                          ? "bg-Total text-white"
                           : "bg-white border"
                       }`}
                   >

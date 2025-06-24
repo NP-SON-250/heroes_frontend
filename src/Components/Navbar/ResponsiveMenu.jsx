@@ -21,10 +21,18 @@ const ResponsiveMenu = ({ isOpen }) => {
                 <a
                   href={items.link}
                   className={`relative inline-block py-1 px-3 font-semibold duration-300 pl-6
-                    ${isActive ? "text-Unpaid/95" : "hover:text-Unpaid/95 hover:pl-8"} 
+                    ${
+                      isActive
+                        ? "text-Unpaid/95"
+                        : "hover:text-Unpaid/95 hover:pl-8"
+                    } 
                     before:content-['•'] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 
                     before:text-Unpaid/95 before:duration-300
-                    ${isActive ? "before:opacity-100" : "before:opacity-0 hover:before:opacity-100"}
+                    ${
+                      isActive
+                        ? "before:opacity-100"
+                        : "before:opacity-0 hover:before:opacity-100"
+                    }
                   `}
                 >
                   {items.name}

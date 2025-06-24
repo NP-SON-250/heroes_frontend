@@ -230,11 +230,7 @@ const SchoolLiveExam = () => {
                       onClick={() => !examFinished && setSelectedQuestion(idx)}
                       disabled={examFinished}
                       className={`w-20 h-10 text-sm rounded-md flex justify-center items-center 
-                      ${
-                        isAnswered
-                          ? "bg-blue-500 text-white"
-                          : "bg-white border"
-                      } 
+                      ${isAnswered ? "bg-Total text-white" : "bg-white border"} 
                       ${examFinished ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
                       Ikibazo: {idx + 1}
@@ -276,7 +272,7 @@ const SchoolLiveExam = () => {
                         <div
                           className={`w-3 h-3 rounded-full border flex items-center justify-center transition ${
                             isSelected
-                              ? "bg-blue-500 text-white"
+                              ? "bg-Total text-white"
                               : "bg-white border-gray-600"
                           }`}
                         >
