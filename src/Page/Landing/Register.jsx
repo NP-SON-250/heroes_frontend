@@ -86,7 +86,10 @@ const Register = () => {
     });
 
     try {
-      const res = await axios.post("http://localhost:4700/api/v1/users", data);
+      const res = await axios.post(
+        "https://heroes-backend-wapq.onrender.com/api/v1/users",
+        data
+      );
       notifySuccess(res.data.message || "Kwiyandikisha byagenze neza!");
       navigate("/kwinjira");
     } catch (error) {

@@ -93,7 +93,7 @@ const AdminProfile = () => {
         if (!validatePasswordChange()) return;
         try {
           await axios.post(
-            `http://localhost:4700/api/v1/users/verify-password`,
+            `https://heroes-backend-wapq.onrender.com/api/v1/users/verify-password`,
             {
               userId: user._id,
               password: passwordData.currentPassword,
@@ -112,7 +112,7 @@ const AdminProfile = () => {
         form.append("password", passwordData.newPassword);
 
         const response = await axios.put(
-          `http://localhost:4700/api/v1/users/${user._id}`,
+          `https://heroes-backend-wapq.onrender.com/api/v1/users/${user._id}`,
           form,
           {
             headers: {
@@ -145,7 +145,7 @@ const AdminProfile = () => {
         }
 
         const response = await axios.put(
-          `http://localhost:4700/api/v1/users/${user._id}`,
+          `https://heroes-backend-wapq.onrender.com/api/v1/users/${user._id}`,
           form,
           {
             headers: {

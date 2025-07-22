@@ -65,7 +65,7 @@ const SchoolLiveExam = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `http://localhost:4700/api/v1/exams/${examId}`,
+          `https://heroes-backend-wapq.onrender.com/api/v1/exams/${examId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -123,14 +123,17 @@ const SchoolLiveExam = () => {
         responses,
       };
 
-      const res = await fetch(`http://localhost:4700/api/v1/responses/add`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
+      const res = await fetch(
+        `https://heroes-backend-wapq.onrender.com/api/v1/responses/add`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       const data = await res.json();
 

@@ -34,7 +34,7 @@ const LiveLearn = () => {
     const fetchPaidExam = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:4700/api/v1/purchases/access/${examCode}`,
+          `https://heroes-backend-wapq.onrender.com/api/v1/purchases/access/${examCode}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setPaidExam(res.data.data.itemId);
@@ -51,7 +51,7 @@ const LiveLearn = () => {
         const examId = paidExam?.examId || paidExam?._id;
         if (!examId) return;
         const res = await axios.get(
-          `http://localhost:4700/api/v1/exams/${examId}`,
+          `https://heroes-backend-wapq.onrender.com/api/v1/exams/${examId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         const examData = res.data.data;
@@ -83,7 +83,7 @@ const LiveLearn = () => {
       if (!number) return;
 
       const purchaseRes = await axios.get(
-        "http://localhost:4700/api/v1/purchases/user",
+        "https://heroes-backend-wapq.onrender.com/api/v1/purchases/user",
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -94,7 +94,7 @@ const LiveLearn = () => {
       if (!examPurchased) return;
 
       const res = await axios.get(
-        `http://localhost:4700/api/v1/exams/gukora/${number}`,
+        `https://heroes-backend-wapq.onrender.com/api/v1/exams/gukora/${number}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const gukoraData = res.data.data;
@@ -116,7 +116,7 @@ const LiveLearn = () => {
     try {
       if (examCode) {
         await axios.delete(
-          `http://localhost:4700/api/v1/purchases/access/${examCode}`
+          `https://heroes-backend-wapq.onrender.com/api/v1/purchases/access/${examCode}`
         );
         navkwigate("/students/waitingexams", {
           replace: true,

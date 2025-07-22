@@ -73,16 +73,40 @@ const AdminDashboard = () => {
           lastWeekAccountsRes,
           currentWeekAccountsRes,
         ] = await Promise.all([
-          axios.get("http://localhost:4700/api/v1/users", config),
-          axios.get("http://localhost:4700/api/v1/exams", config),
-          axios.get("http://localhost:4700/api/v1/accounts", config),
-          axios.get("http://localhost:4700/api/v1/users/last-week", config),
-          axios.get("http://localhost:4700/api/v1/users/current-week", config),
-          axios.get("http://localhost:4700/api/v1/exams/last-week", config),
-          axios.get("http://localhost:4700/api/v1/exams/current-week", config),
-          axios.get("http://localhost:4700/api/v1/accounts/last-week", config),
           axios.get(
-            "http://localhost:4700/api/v1/accounts/current-week",
+            "https://heroes-backend-wapq.onrender.com/api/v1/users",
+            config
+          ),
+          axios.get(
+            "https://heroes-backend-wapq.onrender.com/api/v1/exams",
+            config
+          ),
+          axios.get(
+            "https://heroes-backend-wapq.onrender.com/api/v1/accounts",
+            config
+          ),
+          axios.get(
+            "https://heroes-backend-wapq.onrender.com/api/v1/users/last-week",
+            config
+          ),
+          axios.get(
+            "https://heroes-backend-wapq.onrender.com/api/v1/users/current-week",
+            config
+          ),
+          axios.get(
+            "https://heroes-backend-wapq.onrender.com/api/v1/exams/last-week",
+            config
+          ),
+          axios.get(
+            "https://heroes-backend-wapq.onrender.com/api/v1/exams/current-week",
+            config
+          ),
+          axios.get(
+            "https://heroes-backend-wapq.onrender.com/api/v1/accounts/last-week",
+            config
+          ),
+          axios.get(
+            "https://heroes-backend-wapq.onrender.com/api/v1/accounts/current-week",
             config
           ),
         ]);

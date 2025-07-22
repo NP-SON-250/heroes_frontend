@@ -16,7 +16,7 @@ const CompanyPopup = ({ onClose }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4700/api/v1/users/auth/school",
+        "https://heroes-backend-wapq.onrender.com/api/v1/users/auth/school",
         {
           identifier,
           password,

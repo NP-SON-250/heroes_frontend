@@ -60,11 +60,14 @@ const AdminExams = () => {
         return;
       }
 
-      const res = await axios.get("http://localhost:4700/api/v1/exams", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.get(
+        "https://heroes-backend-wapq.onrender.com/api/v1/exams",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setExams(res.data.data || []);
     } catch (error) {
       console.error("Failed to fetch exams:", error);
@@ -116,7 +119,7 @@ const AdminExams = () => {
 
     try {
       await axios.delete(
-        `http://localhost:4700/api/v1/exams/${examToDelete._id}`,
+        `https://heroes-backend-wapq.onrender.com/api/v1/exams/${examToDelete._id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -145,7 +148,7 @@ const AdminExams = () => {
 
     try {
       const res = await axios.put(
-        `http://localhost:4700/api/v1/exams/${editingExam._id}`,
+        `https://heroes-backend-wapq.onrender.com/api/v1/exams/${editingExam._id}`,
         {
           title: editedTitle,
           fees: editedFees,

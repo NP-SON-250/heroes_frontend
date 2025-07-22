@@ -31,7 +31,7 @@ const AutoTracking = () => {
         try {
           const token = localStorage.getItem("token");
           const response = await axios.get(
-            `http://localhost:4700/api/v1/purchases/access/${examCode}`,
+            `https://heroes-backend-wapq.onrender.com/api/v1/purchases/access/${examCode}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -73,7 +73,7 @@ const AutoTracking = () => {
     }
     if (examDetails?.type === "gukora" || examDetails?.type === "Gukora") {
       navkwigate(`/liveExam?code=${examCode}`);
-    } 
+    }
   };
   console.log(examDetails);
   const handleShowContinueCard = () => {

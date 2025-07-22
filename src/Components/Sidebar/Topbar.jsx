@@ -32,7 +32,7 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
 
     try {
       const response = await axios.get(
-        "http://localhost:4700/api/v1/notification/all",
+        "https://heroes-backend-wapq.onrender.com/api/v1/notification/all",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -75,7 +75,7 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
     const token = localStorage.getItem("token");
     try {
       await axios.delete(
-        `http://localhost:4700/api/v1/notification/mark/${notification._id}`,
+        `https://heroes-backend-wapq.onrender.com/api/v1/notification/mark/${notification._id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

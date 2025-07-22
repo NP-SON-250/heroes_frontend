@@ -30,7 +30,7 @@ const SchoolWaiting = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://localhost:4700/api/v1/purchases/complete",
+        "https://heroes-backend-wapq.onrender.com/api/v1/purchases/complete",
         {
           headers: {
             Authorization: `Bearer ${token}`,

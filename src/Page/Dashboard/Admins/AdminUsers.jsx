@@ -75,11 +75,14 @@ const AdminUsers = () => {
         return;
       }
 
-      const response = await axios.get("http://localhost:4700/api/v1/users", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "https://heroes-backend-wapq.onrender.com/api/v1/users",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setUsers(response.data.data || []);
     } catch (error) {
       console.error("Failed to fetch users:", error);
@@ -138,7 +141,7 @@ const AdminUsers = () => {
       };
 
       await axios.put(
-        `http://localhost:4700/api/v1/users/${userToEdit._id}`,
+        `https://heroes-backend-wapq.onrender.com/api/v1/users/${userToEdit._id}`,
         updatedUser,
         {
           headers: {
@@ -184,7 +187,7 @@ const AdminUsers = () => {
 
     try {
       await axios.delete(
-        `http://localhost:4700/api/v1/users/${userToDelete._id}`,
+        `https://heroes-backend-wapq.onrender.com/api/v1/users/${userToDelete._id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -224,7 +227,7 @@ const AdminUsers = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:4700/api/v1/users",
+        "https://heroes-backend-wapq.onrender.com/api/v1/users",
         newUser,
         {
           headers: {

@@ -13,11 +13,14 @@ const AdminsPayments = () => {
   const fetchPayments = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.get("http://localhost:4700/api/v1/purchases/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.get(
+        "https://heroes-backend-wapq.onrender.com/api/v1/purchases/",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = res.data;
       const mapped = data.data.map((item) => ({
         id: item._id,
@@ -54,7 +57,7 @@ const AdminsPayments = () => {
     setLoadingId(id);
     try {
       await axios.put(
-        `http://localhost:4700/api/v1/purchases/${id}`,
+        `https://heroes-backend-wapq.onrender.com/api/v1/purchases/${id}`,
         { status: "complete" },
         {
           headers: {

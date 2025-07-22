@@ -34,10 +34,22 @@ const SchoolsDashboard = () => {
 
         const [unpaidRes, totalRes, expiredRes, waitingRes] = await Promise.all(
           [
-            axios.get("http://localhost:4700/api/v1/unpaidaccounts", config),
-            axios.get("http://localhost:4700/api/v1/totaluseraccounts", config),
-            axios.get("http://localhost:4700/api/v1/expiredaccounts", config),
-            axios.get("http://localhost:4700/api/v1/waittingaccounts", config),
+            axios.get(
+              "https://heroes-backend-wapq.onrender.com/api/v1/unpaidaccounts",
+              config
+            ),
+            axios.get(
+              "https://heroes-backend-wapq.onrender.com/api/v1/totaluseraccounts",
+              config
+            ),
+            axios.get(
+              "https://heroes-backend-wapq.onrender.com/api/v1/expiredaccounts",
+              config
+            ),
+            axios.get(
+              "https://heroes-backend-wapq.onrender.com/api/v1/waittingaccounts",
+              config
+            ),
           ]
         );
 
