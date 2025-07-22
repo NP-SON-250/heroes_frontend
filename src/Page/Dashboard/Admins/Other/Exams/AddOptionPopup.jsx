@@ -22,7 +22,7 @@ const AddOptionPopup = ({ question, onClose, onSave }) => {
       setIsLoading(true);
 
       const response = await axios.post(
-        `https://heroes-backend-wapq.onrender.com/api/v1/options/${question._id}`,
+        `http://localhost:4700/api/v1/options/${question._id}`,
         payload
       );
       onSave(question._id, response.data.Option);

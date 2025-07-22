@@ -32,7 +32,7 @@ const ViewQuestions = ({ exam, onBack }) => {
   const fetchQuestions = async () => {
     try {
       const res = await axios.get(
-        `https://heroes-backend-wapq.onrender.com/api/v1/questions/${exam._id}`
+        `http://localhost:4700/api/v1/questions/${exam._id}`
       );
       if (res.data && res.data.data) {
         setQuestions(res.data.data);
@@ -86,7 +86,7 @@ const ViewQuestions = ({ exam, onBack }) => {
 
     try {
       await axios.put(
-        `https://heroes-backend-wapq.onrender.com/api/v1/questions/${questionToEdit._id}`,
+        `http://localhost:4700/api/v1/questions/${questionToEdit._id}`,
         formData,
         {
           headers: {
@@ -114,7 +114,7 @@ const ViewQuestions = ({ exam, onBack }) => {
     if (!questionToDelete) return;
     try {
       await axios.delete(
-        `https://heroes-backend-wapq.onrender.com/api/v1/questions/${questionToDelete._id}`
+        `http://localhost:4700/api/v1/questions/${questionToDelete._id}`
       );
       console.log("Question deleted successfully");
       setQuestionToDelete(null);

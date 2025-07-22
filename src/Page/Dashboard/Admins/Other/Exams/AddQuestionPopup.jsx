@@ -47,7 +47,7 @@ const AddQuestionPopup = ({
       }
 
       await axios.post(
-        `https://heroes-backend-wapq.onrender.com/api/v1/questions/${selectedExam._id}`,
+        `http://localhost:4700/api/v1/questions/${selectedExam._id}`,
         data,
         {
           headers: {

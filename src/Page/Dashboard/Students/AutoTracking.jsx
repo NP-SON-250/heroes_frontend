@@ -31,7 +31,7 @@ const AutoTracking = () => {
         try {
           const token = localStorage.getItem("token");
           const response = await axios.get(
-            `https://heroes-backend-wapq.onrender.com/api/v1/purchases/access/${examCode}`,
+            `http://localhost:4700/api/v1/purchases/access/${examCode}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -68,18 +68,14 @@ const AutoTracking = () => {
   };
 
   const handleStartExam = () => {
-    if (examDetails?.type === "kwiga" || examDetails?.type === "kwiga") {
+    if (examDetails?.type === "kwiga" || examDetails?.type === "Kwiga") {
       navkwigate(`/livekwiga?code=${examCode}`);
-    } else if (
-      examDetails?.type === "gukora" ||
-      examDetails?.type === "gukora"
-    ) {
-      navkwigate(`/liveExam?code=${examCode}`);
-    } else {
-      alert("Invalid exam type.");
     }
+    if (examDetails?.type === "gukora" || examDetails?.type === "Gukora") {
+      navkwigate(`/liveExam?code=${examCode}`);
+    } 
   };
-
+  console.log(examDetails);
   const handleShowContinueCard = () => {
     setShowContinueCard(true);
   };

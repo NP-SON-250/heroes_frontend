@@ -59,6 +59,12 @@ const Sidebar = ({ role = "students", onSignOut }) => {
         iconR: <FaGoogleScholar />,
         iconL: <IoIosArrowForward />,
       },
+      {
+        name: "Ibizamini nakoze byose",
+        path: "/students/results",
+        iconR: <PiExam />,
+        iconL: <IoIosArrowForward />,
+      },
     ],
     schools: [
       {
@@ -89,6 +95,12 @@ const Sidebar = ({ role = "students", onSignOut }) => {
         name: "Umwirondoro wa Konte",
         path: "/schools/account",
         iconR: <FaUsersCog />,
+        iconL: <IoIosArrowForward />,
+      },
+      {
+        name: "Ibizamini nakoze byose",
+        path: "/schools/results",
+        iconR: <PiExam />,
         iconL: <IoIosArrowForward />,
       },
     ],

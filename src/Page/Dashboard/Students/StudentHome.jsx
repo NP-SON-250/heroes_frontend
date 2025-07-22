@@ -32,30 +32,12 @@ const StudentHome = () => {
           passedRes,
           failedRes,
         ] = await Promise.all([
-          axios.get(
-            "https://heroes-backend-wapq.onrender.com/api/v1/unpaidexams",
-            config
-          ),
-          axios.get(
-            "https://heroes-backend-wapq.onrender.com/api/v1/totaluserexams",
-            config
-          ),
-          axios.get(
-            "https://heroes-backend-wapq.onrender.com/api/v1/expiredexams",
-            config
-          ),
-          axios.get(
-            "https://heroes-backend-wapq.onrender.com/api/v1/waittingexams",
-            config
-          ),
-          axios.get(
-            "https://heroes-backend-wapq.onrender.com/api/v1/passedexams",
-            config
-          ),
-          axios.get(
-            "https://heroes-backend-wapq.onrender.com/api/v1/failledexams",
-            config
-          ),
+          axios.get("http://localhost:4700/api/v1/unpaidexams", config),
+          axios.get("http://localhost:4700/api/v1/totaluserexams", config),
+          axios.get("http://localhost:4700/api/v1/expiredexams", config),
+          axios.get("http://localhost:4700/api/v1/waittingexams", config),
+          axios.get("http://localhost:4700/api/v1/passedexams", config),
+          axios.get("http://localhost:4700/api/v1/failledexams", config),
         ]);
 
         setUnpaidExams(unpaidRes.data?.data || []);
@@ -75,7 +57,7 @@ const StudentHome = () => {
   return (
     <div className="flex flex-col justify-center items-start md:px-5 gap-2 bg-white md:p-2">
       <WelcomeDear />
-      <div className="grid md:grid-cols-3 grid-cols-1 w-full md:px-0 px-12 gap-12 md:pt-2 py-5 md:gap-12">
+      <div className="grid md:grid-cols-3 grid-cols-1 w-full md:px-0 px-10 gap-12 md:pt-2 py-5 md:gap-12">
         <StHomeCard
           bgColor="bg-blue-900"
           title="Ibizamini Byose"

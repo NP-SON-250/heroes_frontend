@@ -14,6 +14,7 @@ const UsersLay = ({ role }) => {
     "/students/exams": "Ibizamini Byanjye",
     "/students/profile": "Umwirondoro Wanjye",
     "/students/school": "Aho Bagurira konti y'ishuri",
+    "/students/results": "Ibizamini Byose Nakoze",
 
     "/admins/home": "Admin Dashboard",
     "/admins/exams": "Exams",
@@ -27,6 +28,7 @@ const UsersLay = ({ role }) => {
     "/schools/online": "gukora Ibizamini",
     "/schools/accounts": "Konte Nishyuye",
     "/schools/account": "Umwirondoro wa Konte",
+    "/schools/results": "Ibizamini Byose Nakoze",
   };
   const getCurrentYear = () => new Date().getFullYear();
   const currentSection =

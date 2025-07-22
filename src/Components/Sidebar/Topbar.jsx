@@ -32,7 +32,7 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
 
     try {
       const response = await axios.get(
-        "https://heroes-backend-wapq.onrender.com/api/v1/notification/all",
+        "http://localhost:4700/api/v1/notification/all",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -75,7 +75,7 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
     const token = localStorage.getItem("token");
     try {
       await axios.delete(
-        `https://heroes-backend-wapq.onrender.com/api/v1/notification/mark/${notification._id}`,
+        `http://localhost:4700/api/v1/notification/mark/${notification._id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -166,7 +166,9 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
                   Notifications
                 </h3>
                 {notifications.length === 0 ? (
-                  <p className="text-sm text-gray-600">No notifications</p>
+                  <p className="text-sm text-gray-600">
+                    No unread notification
+                  </p>
                 ) : (
                   notifications.map((note) => {
                     const { truncated, fullText, isTruncated } = truncateWords(
@@ -238,7 +240,7 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
               Notifications
             </h3>
             {notifications.length === 0 ? (
-              <p className="text-sm text-gray-600">No notifications</p>
+              <p className="text-sm text-gray-600">No unread notification</p>
             ) : (
               notifications.map((note) => {
                 const { truncated, fullText, isTruncated } = truncateWords(

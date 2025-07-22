@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { BsCart } from "react-icons/bs";
-import { GrSend } from "react-icons/gr";
 import { LuCircleArrowLeft } from "react-icons/lu";
 import { FiArrowRightCircle } from "react-icons/fi";
 import DescriptionCard from "../../../Components/Cards/DescriptionCard";
@@ -11,13 +9,10 @@ import ExamTimer from "../../../Components/ExamTimer";
 const LiveLearn = () => {
   const [examCode, setExamCode] = useState("");
   const [paidExam, setPaidExam] = useState(null);
-  const [gukoraExam, setgukoraExam] = useState(null);
   const [examToDo, setExamToDo] = useState(null);
   const [examQuestions, setExamQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState(0);
   const [showNoQuestionsMessage, setShowNoQuestionsMessage] = useState(false);
-  const [paymentPopup, setPaymentPopup] = useState(false);
-  const [interactedQuestions, setInteractedQuestions] = useState([]);
 
   const location = useLocation();
   const navkwigate = useNavigate();
@@ -39,7 +34,7 @@ const LiveLearn = () => {
     const fetchPaidExam = async () => {
       try {
         const res = await axios.get(
-          `https://heroes-backend-wapq.onrender.com/api/v1/purchases/access/${examCode}`,
+          `http://localhost:4700/api/v1/purchases/access/${examCode}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setPaidExam(res.data.data.itemId);
@@ -56,7 +51,7 @@ const LiveLearn = () => {
         const examId = paidExam?.examId || paidExam?._id;
         if (!examId) return;
         const res = await axios.get(
-          `https://heroes-backend-wapq.onrender.com/api/v1/exams/${examId}`,
+          `http://localhost:4700/api/v1/exams/${examId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         const examData = res.data.data;
@@ -88,7 +83,7 @@ const LiveLearn = () => {
       if (!number) return;
 
       const purchaseRes = await axios.get(
-        "https://heroes-backend-wapq.onrender.com/api/v1/purchases/user",
+        "http://localhost:4700/api/v1/purchases/user",
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -99,7 +94,7 @@ const LiveLearn = () => {
       if (!examPurchased) return;
 
       const res = await axios.get(
-        `https://heroes-backend-wapq.onrender.com/api/v1/exams/gukora/${number}`,
+        `http://localhost:4700/api/v1/exams/gukora/${number}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const gukoraData = res.data.data;
@@ -112,38 +107,6 @@ const LiveLearn = () => {
     }
   }, [examCode, paidExam, token]);
 
-  const handleShowPaymentPopup = async () => {
-    await fetchgukoraExam();
-    if (gukoraExam) {
-      setPaymentPopup(true);
-    }
-  };
-
-  const handlePayLaterClick = async () => {
-    try {
-      await axios.post(
-        `https://heroes-backend-wapq.onrender.com/api/v1/purchases/${gukoraExam._id}`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setPaymentPopup(false);
-    } catch (error) {
-      if (error.response?.status === 404) {
-        alert("You have already purchased this exam.");
-      } else {
-        console.error("Purchase request failed:", error);
-        alert("Failed to initiate purchase. Please try again.");
-      }
-    }
-  };
-
-  const handleSelectQuestion = (index) => {
-    setSelectedQuestion(index);
-    setInteractedQuestions((prev) =>
-      prev.includes(index) ? prev : [...prev, index]
-    );
-  };
-
   const currentQuestion = useMemo(
     () => examQuestions[selectedQuestion],
     [selectedQuestion, examQuestions]
@@ -153,7 +116,7 @@ const LiveLearn = () => {
     try {
       if (examCode) {
         await axios.delete(
-          `https://heroes-backend-wapq.onrender.com/api/v1/purchases/access/${examCode}`
+          `http://localhost:4700/api/v1/purchases/access/${examCode}`
         );
         navkwigate("/students/waitingexams", {
           replace: true,
@@ -192,37 +155,12 @@ const LiveLearn = () => {
               timeLeft={
                 <ExamTimer
                   accessCode={examCode}
-                  duration={2400}
+                  duration={10}
                   onTimeout={handleTimeout}
                 />
               }
               access={examCode}
             />
-
-            <div className="flex flex-wrap justify-center py-1 md:gap-4 gap-2">
-              {examQuestions.map((q, idx) => {
-                const isCurrent = selectedQuestion === idx;
-                const isInteracted = interactedQuestions.includes(idx);
-
-                const getButtonClasses = () => {
-                  if (isCurrent) return "bg-Total text-white";
-
-                  return isInteracted
-                    ? "bg-Total text-white"
-                    : "bg-white border";
-                };
-
-                return (
-                  <button
-                    key={q._id}
-                    onClick={() => handleSelectQuestion(idx)}
-                    className={`w-20 h-10 text-sm rounded-md flex justify-center items-center ${getButtonClasses()}`}
-                  >
-                    Ikibazo: {idx + 1}
-                  </button>
-                );
-              })}
-            </div>
           </>
 
           <div className="w-full px-3">
@@ -268,44 +206,37 @@ const LiveLearn = () => {
                     );
                   })}
                 </form>
-                <div className="mt-4 mb-12 flex justify-between flex-wrap gap-2">
-                  <button
-                    onClick={handleShowPaymentPopup}
-                    className="bg-blue-900 text-white px-4 py-1 rounded flex md:ml-0 ml-12 items-center gap-2"
-                  >
-                    <GrSend />
-                    Isuzume Muri ikikizamini
-                  </button>
+
+                <div className="mt-4 md:flex md:justify-between grid grid-cols-2 gap-4 md:pb-0 pb-4">
                   <button
                     onClick={() =>
-                      handleSelectQuestion(Math.max(selectedQuestion - 1, 0))
+                      setSelectedQuestion((prev) => Math.max(prev - 1, 0))
                     }
+                    className={`bg-blue-900 text-white px-2 py-1 rounded flex justify-center items-center gap-2
+                                            ${
+                                              selectedQuestion === 0
+                                                ? "bg-gray-500 cursor-not-allowed"
+                                                : "bg-blue-900"
+                                            }`}
                     disabled={selectedQuestion === 0}
-                    className={`text-white px-4 py-1 rounded flex items-center gap-2
-                     ${
-                       selectedQuestion === 0
-                         ? "bg-gray-500 cursor-not-allowed"
-                         : "bg-blue-900"
-                     }
-                     `}
                   >
                     <LuCircleArrowLeft />
                     Ikibanza
                   </button>
                   <button
                     onClick={() =>
-                      handleSelectQuestion(
-                        Math.min(selectedQuestion + 1, examQuestions.length - 1)
+                      setSelectedQuestion((prev) =>
+                        Math.min(prev + 1, examQuestions.length - 1)
                       )
                     }
+                    className={`bg-blue-900 text-white px-1 py-1 rounded flex justify-center  items-center gap-2
+                                            ${
+                                              selectedQuestion ===
+                                              examQuestions.length - 1
+                                                ? "bg-gray-500 cursor-not-allowed"
+                                                : "bg-blue-900"
+                                            }`}
                     disabled={selectedQuestion === examQuestions.length - 1}
-                    className={`text-white px-4 py-1 rounded flex items-center gap-2
-                      ${
-                        selectedQuestion === examQuestions.length - 1
-                          ? "bg-gray-500 cursor-not-allowed"
-                          : "bg-blue-900"
-                      }
-  `}
                   >
                     <FiArrowRightCircle /> Igikurikira
                   </button>
@@ -314,44 +245,6 @@ const LiveLearn = () => {
             ) : null}
           </div>
         </>
-      )}
-
-      {paymentPopup && gukoraExam && (
-        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-          <div className="bg-Total p-4 rounded-lg md:w-1/2 h-1/2 flex justify-center items-center w-full relative">
-            <button
-              className="absolute top-1 bg-white w-10 h-10 rounded-full right-2 text-red-500 text-xl"
-              onClick={() => setPaymentPopup(false)}
-            >
-              ✖
-            </button>
-
-            <div className="md:w-1/2 w-full md:px-0 px-3">
-              <div className="flex w-full flex-col bg-gray-300 rounded-lg">
-                <div className="flex flex-col justify-center items-center gap-1 py-5">
-                  <h1 className="text-xl pt-1 text-Total font-bold">
-                    {gukoraExam.title}: {gukoraExam.number}
-                  </h1>
-                  <div className="flex flex-col justify-center items-start">
-                    <p className="text-Total">
-                      Igiciro:{" "}
-                      <span className="font-bold">{gukoraExam.fees} Rwf</span>
-                    </p>
-                    <p className="text-Total">Ubwoko: {gukoraExam.type}</p>
-                  </div>
-                </div>
-                <div className="pt-1">
-                  <button
-                    className="flex items-center justify-center gap-4 text-lg py-1 px-4 rounded-md w-full text-white bg-yellow-500"
-                    onClick={handlePayLaterClick}
-                  >
-                    <BsCart /> Saba Kwishyura
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       )}
     </div>
   );

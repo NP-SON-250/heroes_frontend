@@ -81,7 +81,7 @@ const LiveExam = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `https://heroes-backend-wapq.onrender.com/api/v1/purchases/access/${examCode}`,
+          `http://localhost:4700/api/v1/purchases/access/${examCode}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -102,7 +102,7 @@ const LiveExam = () => {
         if (!examId) return;
 
         const res = await axios.get(
-          `https://heroes-backend-wapq.onrender.com/api/v1/exams/${examId}`,
+          `http://localhost:4700/api/v1/exams/${examId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -202,7 +202,7 @@ const LiveExam = () => {
       };
 
       const res = await axios.post(
-        "https://heroes-backend-wapq.onrender.com/api/v1/responses/add",
+        "http://localhost:4700/api/v1/responses/add",
         payload,
         {
           headers: {
@@ -213,7 +213,7 @@ const LiveExam = () => {
 
       try {
         const deleted = await axios.delete(
-          `https://heroes-backend-wapq.onrender.com/api/v1/purchases/access/${examCode}`,
+          `http://localhost:4700/api/v1/purchases/access/${examCode}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -359,24 +359,6 @@ const LiveExam = () => {
             access={examCode}
           />
 
-          <div className="flex flex-wrap justify-center py-1 md:gap-4 gap-2">
-            {examQuestions.map((q, idx) => {
-              const isAnswered = selectedOptions[q._id];
-              return (
-                <button
-                  key={q._id}
-                  onClick={() => !examFinished && setSelectedQuestion(idx)}
-                  disabled={examFinished}
-                  className={`w-20 h-10 text-sm rounded-md flex justify-center items-center 
-                    ${isAnswered ? "bg-Total text-white" : "bg-white border"} 
-                    ${examFinished ? "opacity-50 cursor-not-allowed" : ""}`}
-                >
-                  Ikibazo: {idx + 1}
-                </button>
-              );
-            })}
-          </div>
-
           <div className="w-full px-3">
             {currentQuestion && (
               <>
@@ -423,19 +405,13 @@ const LiveExam = () => {
                 </div>
 
                 {!examFinished && (
-                  <div className="mt-4 md:flex md:justify-between grid grid-cols-2 gap-4 md:pb-0 pb-4">
-                    <button
-                      onClick={confirmFinishExam}
-                      className="bg-blue-900 text-white px-2 py-1 rounded flex justify-center items-center gap-2"
-                    >
-                      <GrSend />
-                      Soza Ikizamini
-                    </button>
+                  <div className="mt-4 md:flex md:justify-between grid grid-cols-3 gap-4 md:pb-0 pb-4">
+                    
                     <button
                       onClick={() =>
                         setSelectedQuestion((prev) => Math.max(prev - 1, 0))
                       }
-                      className={`bg-blue-900 text-white px-2 py-1 rounded flex jus items-center gap-2
+                      className={`bg-blue-900 text-white px-2 py-1 rounded flex justify-center items-center gap-2
                             ${
                               selectedQuestion === 0
                                 ? "bg-gray-500 cursor-not-allowed"
@@ -444,7 +420,7 @@ const LiveExam = () => {
                       disabled={selectedQuestion === 0}
                     >
                       <LuCircleArrowLeft />
-                      Ikibanza / Prev
+                      Ikibanza
                     </button>
                     <button
                       onClick={() =>
@@ -452,7 +428,7 @@ const LiveExam = () => {
                           Math.min(prev + 1, examQuestions.length - 1)
                         )
                       }
-                      className={`bg-blue-900 text-white px-2 py-1 rounded flex jus items-center gap-2
+                      className={`bg-blue-900 text-white px-1 py-1 rounded flex justify-center  items-center gap-2
                             ${
                               selectedQuestion === examQuestions.length - 1
                                 ? "bg-gray-500 cursor-not-allowed"
@@ -460,7 +436,14 @@ const LiveExam = () => {
                             }`}
                       disabled={selectedQuestion === examQuestions.length - 1}
                     >
-                      <FiArrowRightCircle /> Igikurikira / Next
+                      <FiArrowRightCircle /> Igikurikira
+                    </button>
+                    <button
+                      onClick={confirmFinishExam}
+                      className="bg-blue-900 text-white px-2 py-1 rounded flex justify-center items-center gap-2"
+                    >
+                      <GrSend />
+                      Soza
                     </button>
                   </div>
                 )}
