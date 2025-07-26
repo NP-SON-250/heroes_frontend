@@ -19,7 +19,7 @@ const AddNewExamPopup = ({ setShowAddExamPopup, onExamAdded }) => {
       };
 
       const res = await axios.post(
-        "https://heroes-backend-wapq.onrender.com/api/v1/exams",
+        "http://localhost:4700/api/v1/exams",
         newExam
       );
 

@@ -32,30 +32,12 @@ const StudentHome = () => {
           passedRes,
           failedRes,
         ] = await Promise.all([
-          axios.get(
-            "https://heroes-backend-wapq.onrender.com/api/v1/unpaidexams",
-            config
-          ),
-          axios.get(
-            "https://heroes-backend-wapq.onrender.com/api/v1/totaluserexams",
-            config
-          ),
-          axios.get(
-            "https://heroes-backend-wapq.onrender.com/api/v1/expiredexams",
-            config
-          ),
-          axios.get(
-            "https://heroes-backend-wapq.onrender.com/api/v1/waittingexams",
-            config
-          ),
-          axios.get(
-            "https://heroes-backend-wapq.onrender.com/api/v1/passedexams",
-            config
-          ),
-          axios.get(
-            "https://heroes-backend-wapq.onrender.com/api/v1/failledexams",
-            config
-          ),
+          axios.get("http://localhost:4700/api/v1/unpaidexams", config),
+          axios.get("http://localhost:4700/api/v1/totaluserexams", config),
+          axios.get("http://localhost:4700/api/v1/expiredexams", config),
+          axios.get("http://localhost:4700/api/v1/waittingexams", config),
+          axios.get("http://localhost:4700/api/v1/passedexams", config),
+          axios.get("http://localhost:4700/api/v1/failledexams", config),
         ]);
 
         setUnpaidExams(unpaidRes.data?.data || []);

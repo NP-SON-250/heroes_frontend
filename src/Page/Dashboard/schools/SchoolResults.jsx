@@ -20,7 +20,7 @@ const SchoolResults = () => {
 
       try {
         const res = await axios.get(
-          "https://heroes-backend-wapq.onrender.com/api/v1/responses/user",
+          "http://localhost:4700/api/v1/responses/user",
           {
             headers: {
               Authorization: `Bearer ${token}`,

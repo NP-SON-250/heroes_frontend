@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Police from "../../../assets/Policelogo.png";
+import Police from "../../../assets/heroeslogo.png";
 import { GrSend } from "react-icons/gr";
 import { LuCircleArrowLeft } from "react-icons/lu";
 import { FiArrowRightCircle } from "react-icons/fi";
@@ -81,7 +81,7 @@ const LiveExam = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `https://heroes-backend-wapq.onrender.com/api/v1/purchases/access/${examCode}`,
+          `http://localhost:4700/api/v1/purchases/access/${examCode}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -102,7 +102,7 @@ const LiveExam = () => {
         if (!examId) return;
 
         const res = await axios.get(
-          `https://heroes-backend-wapq.onrender.com/api/v1/exams/${examId}`,
+          `http://localhost:4700/api/v1/exams/${examId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -202,7 +202,7 @@ const LiveExam = () => {
       };
 
       const res = await axios.post(
-        "https://heroes-backend-wapq.onrender.com/api/v1/responses/add",
+        "http://localhost:4700/api/v1/responses/add",
         payload,
         {
           headers: {
@@ -213,7 +213,7 @@ const LiveExam = () => {
 
       try {
         const deleted = await axios.delete(
-          `https://heroes-backend-wapq.onrender.com/api/v1/purchases/access/${examCode}`,
+          `http://localhost:4700/api/v1/purchases/access/${examCode}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

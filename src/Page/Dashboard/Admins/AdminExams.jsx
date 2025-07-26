@@ -61,14 +61,11 @@ const AdminExams = () => {
         return;
       }
 
-      const res = await axios.get(
-        "https://heroes-backend-wapq.onrender.com/api/v1/exams",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get("http://localhost:4700/api/v1/exams", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setExams(res.data.data || []);
     } catch (error) {
       console.error("Failed to fetch exams:", error);
@@ -120,7 +117,7 @@ const AdminExams = () => {
 
     try {
       await axios.delete(
-        `https://heroes-backend-wapq.onrender.com/api/v1/exams/${examToDelete._id}`,
+        `http://localhost:4700/api/v1/exams/${examToDelete._id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -149,7 +146,7 @@ const AdminExams = () => {
 
     try {
       const res = await axios.put(
-        `https://heroes-backend-wapq.onrender.com/api/v1/exams/${editingExam._id}`,
+        `http://localhost:4700/api/v1/exams/${editingExam._id}`,
         {
           title: editedTitle,
           fees: editedFees,
@@ -212,7 +209,7 @@ const AdminExams = () => {
         )}
       </div>
 
-      <div className="overflow-x-auto rounded-lg shadow border border-blue-900">
+      <div className="overflow-auto scrollbar-hide rounded-lg shadow border border-blue-900">
         <table className="w-full text-left table-auto">
           <thead className="bg-gray-100 text-gray-700">
             <tr>

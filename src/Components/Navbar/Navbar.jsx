@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
-import Logo from "../../assets/Policelogo.png";
+import Logo from "../../assets/heroeslogo.png";
 import { navContents } from "../../Data/morkData";
 import { MdMenu, MdOutlineClose } from "react-icons/md";
 import ResponsiveMenu from "./ResponsiveMenu";

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MdOutlineContentPasteSearch } from "react-icons/md";
-import Police from "../../../assets/Policelogo.png";
+import Police from "../../../assets/heroeslogo.png";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import ContinueCard from "../../../Components/Cards/ContinueCard";
 import ConfirmCard from "../../../Components/Cards/ConfirmCard";
@@ -31,7 +31,7 @@ const AutoTracking = () => {
         try {
           const token = localStorage.getItem("token");
           const response = await axios.get(
-            `https://heroes-backend-wapq.onrender.com/api/v1/purchases/access/${examCode}`,
+            `http://localhost:4700/api/v1/purchases/access/${examCode}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,

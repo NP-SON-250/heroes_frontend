@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Police from "../../assets/Policelogo.png";
+import Police from "../../assets/heroeslogo.png";
 
 const ConfirmCard = ({ code, onClick, onClose, onChange }) => {
   return (

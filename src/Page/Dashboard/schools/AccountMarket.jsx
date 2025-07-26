@@ -35,7 +35,7 @@ const AccountMarket = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://heroes-backend-wapq.onrender.com/api/v1/accounts",
+        "http://localhost:4700/api/v1/accounts",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -92,7 +92,7 @@ const AccountMarket = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `https://heroes-backend-wapq.onrender.com/api/v1/purchases/${selectedAccount._id}`,
+        `http://localhost:4700/api/v1/purchases/${selectedAccount._id}`,
         {},
         {
           headers: {

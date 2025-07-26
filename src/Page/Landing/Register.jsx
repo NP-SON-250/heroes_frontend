@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { GoPaperclip } from "react-icons/go";
 import { ImUserPlus } from "react-icons/im";
 import { IoClose } from "react-icons/io5";
-import Logo from "../../assets/Policelogo.png";
+import Logo from "../../assets/heroeslogo.png";
 import HalfInput from "../../Components/Inputs/Studentnputs/HalfInput";
 import FullInput from "../../Components/Inputs/Studentnputs/FullInput";
 import axios from "axios";
@@ -86,10 +86,7 @@ const Register = () => {
     });
 
     try {
-      const res = await axios.post(
-        "https://heroes-backend-wapq.onrender.com/api/v1/users",
-        data
-      );
+      const res = await axios.post("http://localhost:4700/api/v1/users", data);
       notifySuccess(res.data.message || "Kwiyandikisha byagenze neza!");
       navigate("/kwinjira");
     } catch (error) {

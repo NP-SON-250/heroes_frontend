@@ -39,9 +39,7 @@ const AdminAccounts = () => {
 
   const fetchAccounts = async () => {
     try {
-      const response = await axios.get(
-        "https://heroes-backend-wapq.onrender.com/api/v1/accounts"
-      );
+      const response = await axios.get("http://localhost:4700/api/v1/accounts");
       setAccounts(response.data.data || []);
     } catch (error) {
       console.error("Failed to fetch accounts:", error);
@@ -76,7 +74,7 @@ const AdminAccounts = () => {
       }
 
       await axios.delete(
-        `https://heroes-backend-wapq.onrender.com/api/v1/accounts/${accountToDelete._id}`,
+        `http://localhost:4700/api/v1/accounts/${accountToDelete._id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -105,7 +103,7 @@ const AdminAccounts = () => {
       }
 
       await axios.put(
-        `https://heroes-backend-wapq.onrender.com/api/v1/accounts/${accountToEdit._id}`,
+        `http://localhost:4700/api/v1/accounts/${accountToEdit._id}`,
         {
           title: editedTitle,
           fees: editedFees,
@@ -155,7 +153,7 @@ const AdminAccounts = () => {
         )}
       </div>
 
-      <div className="overflow-x-auto rounded-lg shadow border border-blue-900">
+      <div className="overflow-auto scrollbar-hide rounded-lg shadow border border-blue-900">
         <table className="w-full text-left table-auto">
           <thead className="bg-gray-100 text-gray-700">
             <tr>

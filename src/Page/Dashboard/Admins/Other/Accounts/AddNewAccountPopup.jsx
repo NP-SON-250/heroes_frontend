@@ -11,7 +11,7 @@ const AddNewAccountPopup = ({ setShowAddAccountPopup, onAccountAdded }) => {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        "https://heroes-backend-wapq.onrender.com/api/v1/accounts",
+        "http://localhost:4700/api/v1/accounts",
         {
           title: accountTitle,
           fees: accountFees,

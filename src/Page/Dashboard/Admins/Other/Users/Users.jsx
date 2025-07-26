@@ -61,14 +61,11 @@ const Users = () => {
         return;
       }
 
-      const response = await axios.get(
-        "https://heroes-backend-wapq.onrender.com/api/v1/users",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get("http://localhost:4700/api/v1/users", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setUsers(response.data.data || []);
     } catch (error) {
       console.error("Failed to fetch users:", error);
@@ -126,7 +123,7 @@ const Users = () => {
       };
 
       await axios.put(
-        `https://heroes-backend-wapq.onrender.com/api/v1/users/${userToEdit._id}`,
+        `http://localhost:4700/api/v1/users/${userToEdit._id}`,
         updatedUser,
         {
           headers: {
@@ -170,7 +167,7 @@ const Users = () => {
 
     try {
       await axios.delete(
-        `https://heroes-backend-wapq.onrender.com/api/v1/users/${userToDelete._id}`,
+        `http://localhost:4700/api/v1/users/${userToDelete._id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -206,7 +203,7 @@ const Users = () => {
         <h2 className="text-2xl font-semibold">Manage All Users</h2>
       </div>
 
-      <div className="overflow-x-auto rounded-lg shadow border border-gray-200">
+      <div className="overflow-auto scrollbar-hide rounded-lg shadow border border-gray-200">
         <table className="w-full text-left table-auto">
           <thead className="bg-gray-100 text-gray-700">
             <tr>

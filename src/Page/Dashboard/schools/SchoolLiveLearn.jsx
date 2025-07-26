@@ -27,7 +27,7 @@ const SchoolLiveLearn = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `https://heroes-backend-wapq.onrender.com/api/v1/exams/${examId}`,
+          `http://localhost:4700/api/v1/exams/${examId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         const examData = res.data.data;

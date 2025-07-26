@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
-import Police from "../../assets/Policelogo.png";
+import Police from "../../assets/heroeslogo.png";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import axios from "axios";
 
@@ -32,7 +32,7 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
 
     try {
       const response = await axios.get(
-        "https://heroes-backend-wapq.onrender.com/api/v1/notification/all",
+        "http://localhost:4700/api/v1/notification/all",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -75,7 +75,7 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
     const token = localStorage.getItem("token");
     try {
       await axios.delete(
-        `https://heroes-backend-wapq.onrender.com/api/v1/notification/mark/${notification._id}`,
+        `http://localhost:4700/api/v1/notification/mark/${notification._id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
