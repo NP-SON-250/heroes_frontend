@@ -55,6 +55,10 @@ const Login = () => {
           navigate("/schools/home");
           window.location.reload();
           break;
+        case "supperAdmin":
+          navigate("/admins/home");
+          window.location.reload();
+          break;
         default:
           toast.error("Ntitwabashije kumenya uw'uriwe");
       }

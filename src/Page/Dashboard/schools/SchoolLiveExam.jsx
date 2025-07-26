@@ -220,24 +220,6 @@ const SchoolLiveExam = () => {
                 }
                 access={examId}
               />
-
-              <div className="flex flex-wrap justify-center py-1 md:gap-4 gap-2">
-                {examQuestions.map((q, idx) => {
-                  const isAnswered = selectedOptions[q._id];
-                  return (
-                    <button
-                      key={q._id}
-                      onClick={() => !examFinished && setSelectedQuestion(idx)}
-                      disabled={examFinished}
-                      className={`w-20 h-10 text-sm rounded-md flex justify-center items-center 
-                      ${isAnswered ? "bg-Total text-white" : "bg-white border"} 
-                      ${examFinished ? "opacity-50 cursor-not-allowed" : ""}`}
-                    >
-                      Ikibazo: {idx + 1}
-                    </button>
-                  );
-                })}
-              </div>
             </>
           )}
 
